@@ -1,0 +1,74 @@
+<app-header></app-header>
+<div class="container">
+  <form #loginForm="ngForm">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="login-form mx-auto">
+                <h2 class="login-header">Login</h2>
+              <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input type="text" class="form-control"
+                       [(ngModel)]="phoneNumber"
+                       (focus)="validatePhoneNumber(); loginForm.form.markAsTouched()"
+                       name="phoneNumber"
+                       required
+                       id="phoneNumber">
+                <div class="divider-nospace"></div>
+                <p class="text-danger"
+                   *ngIf="phoneNumber.length<6
+                        && loginForm.form.touched">
+                  Phone number size must be greater than 6
+                </p>
+                <div class="mt-5"></div>
+                <div class="form-group password-field">
+                    <label for="password">Password</label>
+                    <input type="password"
+                           [(ngModel)]="password"
+                           name="password"
+                           placeholder="Ít nhất 3 ký tự"
+                        class="form-control" id="password">
+                    <i class="password-toggle fas fa-eye-slash"></i>
+                    <div class="divider-nospace"></div>
+                </div>
+                <div class="text-danger"
+                    *ngIf="password.length<3
+                            && loginForm.form.touched">
+                    Password size must be greater than 3
+                </div>
+                <div class="form-group">
+                    <div class="form-check checkbox-text">
+                        <span style="display: flex;">
+                            <input type="checkbox" class="form-check-input"
+                                   [(ngModel)]="rememberMe"
+                                   id="remember"
+                            name="rememberMe">
+                            <label class="form-check-label text-start"
+                                   for="remember">
+                                Login save</label>
+                        </span>
+                        <a href="#" class="register-link">Forgot password</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <select class="form-control access-right"
+                        [(ngModel)]="selectedRole"
+                        name="selectedRole">
+                      <option selected disabled>Login permission</option>
+                      <option *ngFor="let role of roles" [ngValue]="role">
+                        {{ role.name }}
+                      </option>
+                    </select>
+                  </div>
+                  <button type="button"
+                          (click)="login()"
+                          class="login-button">Login</button>
+                  <div class="divider"></div>
+                  <p class="text-center">You don't have account?<span>
+                    <a routerLink="/register" class="register-link">Create an account</a></span></p>
+        </div>
+    </div>
+</div>
+    </div>
+  </form>
+</div>
+<app-footer></app-footer>

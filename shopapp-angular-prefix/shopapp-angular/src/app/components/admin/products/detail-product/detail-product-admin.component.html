@@ -1,0 +1,66 @@
+<div class="container-fluid" xmlns="http://www.w3.org/1999/html">
+  <div class="ant-page-header"><h1>Detail Product Admin</h1></div>
+  <h2>Product Information</h2>
+  <div class="container" *ngIf="product">
+    <div class="col">
+      <div class="row-cols-4">
+        <label><span class="information">Product ID:</span> {{ product.id }}</label>
+      </div>
+      <div class="row-cols-4">
+        <label *ngIf="!editButton"><span class="information">Product Name:</span> {{ product.name }}</label>
+        <span class="information" *ngIf="editButton">Product Name:
+          <input type="text" [placeholder]="product.name" [(ngModel)]="product.name"></span>
+      </div>
+      <div class="row-cols-4">
+        <label *ngIf="!editButton"><span class="information">Price:</span> {{ product.price }}</label>
+        <span class="information" *ngIf="editButton">Price:
+          <input type="text" [placeholder]="product.price" [(ngModel)]="product.price"></span>
+      </div>
+      <div class="row-cols-4">
+        <label *ngIf="!editButton"><span class="information">Description:</span> {{ product.description }}</label>
+        <span class="information" *ngIf="editButton">Description:
+          <input type="text" [placeholder]="product.description" [(ngModel)]="product.description"></span>
+      </div>
+      <div class="row-cols-4">
+        <label *ngIf="!editButton"><span class="information">Category Id:</span> {{ product.category_id }}</label>
+        <span class="information" *ngIf="editButton">Category Id:
+          <input type="text" [placeholder]="product.category_id" [(ngModel)]="product.category_id"></span>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-6">
+      <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div
+            *ngFor="let image of product?.product_images; let i = index"
+            class="carousel-item" [ngClass]="{'active': i === currentImageIndex}">
+            <div class="square-image">
+              <img [src]="image.image_url" class="product-image" alt="Product Image">
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev"
+                (click)="previousImage()">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next"
+                (click)="nextImage()">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="row-cols-2 col-md-2">
+        <button class="btn btn-primary" (click)="saveProduct()">Save</button>
+      </div>
+      <div class="row-cols-2 col-md-2">
+        <button class="btn btn-primary" [(ngModel)]="editButton" (click)="clickEditButton()">Edit</button>
+      </div>
+    </div>
+  </div>
+</div>

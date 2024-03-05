@@ -1,0 +1,23 @@
+
+.page-number {
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  margin: 0 2px;
+  border-radius: 3px;
+}
+
+.page-number.active {
+  background-color: rgb(127, 68, 255) !important;
+  color: #fff;
+  border-color: rgb(127, 68, 255) !important;
+}
+.btn.btn-primary {
+  margin-left: 10px;
+}
+.container-fluid{
+  background-color: white;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  height: 100vh;
+}

@@ -1,0 +1,60 @@
+@import "../../styles/shared-styles.scss";
+
+header {
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(173, 178, 203);
+}
+
+.navbar {
+    background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.navbar .container {
+    background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.navbar .container .navbar-brand {
+    color: rgb(173, 178, 203);
+}
+
+.nav-item.active{
+  background-color: rgb(127, 68, 255) !important;
+  color: white !important;
+}
+
+.navbar .container .navbar-nav .nav-link {
+    color: rgb(173, 178, 203);
+    border-radius: 18px;
+    padding: 8px 16px;
+}
+
+.navbar .container .navbar-nav .nav-link.active {
+    background-color: rgb(127, 68, 255) !important;
+    color: white !important;
+}
+
+.popover-list{
+  padding: 10px;
+}
+
+.popover-item{
+  display: block;
+  margin-bottom: 5px;
+  text-decoration: none;
+  color: #333;
+}
+
+#hr{
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.popover-item:hover {
+  color: red;
+}
+
+.popover-item:hover ~ hr {
+  background-color: #f0f0f0;
+  color: rgb(127, 68, 255);
+}

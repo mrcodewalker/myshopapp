@@ -1,0 +1,185 @@
+<app-header></app-header>
+<div class="container">
+    <div class="intro-section">
+        <h1 style="color: white">This is an order page</h1>
+        <p>Using boostrap framework</p>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h2 class="product-header">Customer</h2>
+            <form [formGroup]="orderForm">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Full name</label>
+                    <input type="text"
+                           formControlName="fullname"
+                           name="fullname"
+                           [class.is-invalid]="orderForm.get('fullname')!.invalid && orderForm.get('fullname')!.touched"
+                           class="form-control" id="name" required>
+                  <div *ngIf="orderForm.get('fullname')!.invalid && orderForm.get('fullname')!.touched" class="invalid-feedback">
+                      You must enter your full name
+                  </div>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email"
+                           name="email"
+                           formControlName="email"
+                           placeholder="abcxyz@gmail.com"
+                           class="form-control" id="email" required
+                           [class.is-invalid]="orderForm.get('email')!.invalid && orderForm.get('email')!.touched"
+                    >
+                  <div *ngIf="orderForm.get('email')!.invalid && orderForm.get('email')!.touched" class="invalid-feedback">
+                    Email you were type is not correct
+                  </div>
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone number</label>
+                    <input type="text"
+                           name="phoneNumber"
+                           formControlName="phone_number"
+                           [class.is-invalid]="orderForm.get('phone_number')!.invalid && orderForm.get('phone_number')!.touched"
+                           class="form-control" id="phone" required>
+                  <div *ngIf="orderForm.get('phone_number')!.invalid && orderForm.get('phone_number')!.touched" class="invalid-feedback">
+                    Phone number length must be greater than 6
+                  </div>
+                </div>
+              <div class="mb-3">
+                <label for="phone" class="form-label">Address</label>
+                <input type="text"
+                       name="address"
+                      formControlName="address"
+                       class="form-control" id="address" required>
+              </div>
+              <div class="mb-3">
+                <label for="shipping_address" class="form-label">Shipping Address</label>
+                <input type="text"
+                       name="shipping_address"
+                       formControlName="shipping_address"
+                       class="form-control" id="shipping_address" required>
+                <span *ngIf="orderForm.get('shipping_address')?.touched &&
+                 orderForm.get('shipping_address')?.invalid" class="text-danger">
+                  Please enter your detail address, the size must be greater 5
+                </span>
+              </div>
+              <div class="mb-3">
+                <label for="phone" class="form-label">Province / District / Commune</label>
+                <div class="row">
+                  <div class="col-md-4">
+                    <select class="form-select" aria-label="Default select example" (change)="updateProvinceValue($event)" required>
+                      <option selected>Choose province...</option>
+                      <option *ngFor="let province of provinces" [value]="province.province_id">{{ province.province_name }}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <select class="form-select" aria-label="Default select example" (change)="updateDistrictValue($event)">
+                      <option selected>Choose district...</option>
+                      <option *ngFor="let district of districts" [value]="district.district_id">{{ district.district_name }}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <select class="form-select" aria-label="Default select example" (change)="updateCommuneValue($event)">
+                      <option selected>Choose communes...</option>
+                      <option *ngFor="let commune of communes" [value]="commune.commune_id">{{ commune.commune_name }}</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                  <span class="text-danger" *ngIf="(provinces.length===0||districts.length===0||communeId===0) && (orderForm?.touched)">
+                    Please select your shipping address
+                  </span>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="phone" class="form-label">Note</label>
+                <input type="text"
+                       name="note"
+                       formControlName="note"
+                       class="form-control" id="note">
+              </div>
+              <div class="form-group">
+                <label for="shippingMethod">
+                  Shipping method
+                </label>
+                <select class="form-control" id="shippingMethod" name="shipping_method"
+                        formControlName="shipping_method">
+                  <option value="express">Express</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="paymentMethod">
+                  Payment method
+                </label>
+                <select class="form-control" id="paymentMethod"
+                        formControlName="payment_method"
+                        name="paymentMethod">
+                  <option value="cod">COD</option>
+                  <option value="atm">ATM</option>
+                </select>
+              </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <h2 class="product-order">All of products was ordered</h2>
+          <table>
+            <thead>
+            <tr>
+              <th scope="col" class="text-start">Product</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Price</th>
+              <th scope="col">Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let item of cartItems">
+              <tr>
+                <td>
+                  <div class="product-info">
+                    <img [src]="item.product.thumbnail" alt="Product Image" class="product-image">
+                    <span class="product-name">{{ item.product.name }}</span>
+                  </div>
+                </td>
+                <td>
+                  {{ item.quantity }}
+                </td>
+                <td>
+                  {{ item.product.price | currency:'VND':'symbol':'1.0-0' }}
+                </td>
+                <td>
+                  {{ item.product.price* item.quantity | currency:'VND':'symbol':'1.0-0'}}
+                </td>
+              </tr>
+            </ng-container>
+            </tbody>
+          </table>
+            <div class="text-start mt-3">
+                <h4 class="header-text text-end ">
+                  <p class="mb-0" *ngIf="discountValue==0">Total Amount: {{ totalAmount | currency:'VND':'symbol':'1.0-0'}}</p>
+                  <p class="mb-0" *ngIf="discountValue>0">
+                    <del>Total Amount: {{ totalAmount | currency:'VND':'symbol':'1.0-0'}}</del>
+                    <br>
+                    Discounted Amount: {{ (totalAmount - (totalAmount * (discountValue / 100))) | currency:'VND':'symbol':'1.0-0'}}
+                  </p>
+                  <p class="mb-0" *ngIf="discountValue>0" (click)="applyCoupon()">You have been discount {{discountValue}}% for this bill</p>
+                </h4>
+            </div>
+            <div class="mt-3">
+                <h4 class="product-header">Coupon</h4>
+                <div class="input-group">
+                    <input type="text" class="form-control"
+                           [(ngModel)]="couponCode"
+                           placeholder="Apply coupon">
+                    <button class="btn btn-gradient" type="button" (click)="applyCoupon()">Apply coupon</button>
+                </div>
+            </div>
+            <div class="text-start mt-3">
+                <button class="btn btn-gradient" type="button" (click)="placeOrder()">Complete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer mt-auto py-3">
+  <div class="container">
+    <app-footer></app-footer>
+  </div>
+</footer>

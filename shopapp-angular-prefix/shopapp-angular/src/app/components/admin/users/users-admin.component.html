@@ -1,0 +1,110 @@
+<div class="container-fluid">
+  <h1>Order Admin Page</h1>
+  <div class="row mb-3">
+    <div class="col-md-8">
+      <input type="text"
+             class="form-control search-input" placeholder="Search users"
+             [(ngModel)]="keyword">
+    </div>
+    <div class="col-md-4">
+      <button nz-button nzType="dashed" class="btn btn-primary" (click)="searchUsers()">
+        <span nz-icon nzType="search"></span>
+        Search
+      </button>
+    </div>
+  </div>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Full Name</th>
+      <th>Phone Number</th>
+      <th>Address</th>
+      <th>Date Of Birth</th>
+      <th>Facebook</th>
+      <th>Google</th>
+      <th>Is Active</th>
+      <th>Role</th>
+      <!--
+      <th>Shipping Method</th>
+      <th>Shipping Address</th>
+
+        <th>Shipping Date</th>
+      <th>Payment Method</th>
+      -->
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of users">
+      <td>
+        {{ user.id }}</td>
+      <td>{{ user.fullname }}</td>
+      <td>{{ user.phone_number }}</td>
+      <td>{{ user.address }}</td>
+      <td>{{ user.date_of_birth | date: 'dd/MM/yyyy' }}</td>
+      <td>
+        <span [ngClass]="{'text-primary': user.facebook_account_id !== 0, 'text-danger': user.facebook_account_id === 0}">
+          {{ user.facebook_account_id !== 0 ? 'Active' : 'Invalid' }}
+        </span>
+      </td>
+      <td>
+        <span [ngClass]="{'text-primary': user.google_account_id !== 0, 'text-danger': user.google_account_id === 0}">
+          {{ user.google_account_id !== 0 ? 'Active' : 'Invalid' }}
+        </span>
+      </td>
+      <td>
+        <select [(ngModel)]="user.is_active" (ngModelChange)="onIsActiveChange(user)">
+          <option value="true">Active</option>
+          <option value="false">Invalid</option>
+        </select>
+      </td>
+      <td>
+        <select [(ngModel)]="user.role.name" (ngModelChange)="onRoleChange(user)">
+          <option value="user">USER</option>
+          <option value="admin">ADMIN</option>
+        </select>
+      </td>
+      <!--
+      <td>{{ order.shipping_method }}</td>
+      <td>{{ order.shipping_address }}</td>
+
+      <td>{{ order.shipping_date | date }}</td>
+      <td>{{ order.payment_method }}</td>
+      -->
+      <td>
+        <div style="display: flex; gap: 10px;">
+          <button nz-button nzType="primary" class="btn btn-primary" (click)="updateUserByAdmin(user.id)">Update</button>
+          <button class="btn btn-danger" (click)="deleteById(user)"
+          >Delete</button>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="d-flex justify-content-center">
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item" *ngIf="currentPage > 0">
+          <a class="page-link"
+             (click)="onPageChange(0)">First</a>
+        </li>
+        <li class="page-item" *ngIf="currentPage > 0">
+          <a class="page-link"
+             (click)="onPageChange(currentPage-1)">Previous</a>
+        </li>
+        <ng-container *ngFor="let page of visiblePages">
+          <li class="page-item" [ngClass]="{'active': page === currentPage +1}">
+            <a class="page-link" (click)="onPageChange(page-1)">{{ page }}</a>
+          </li>
+        </ng-container>
+        <li class="page-item" *ngIf="currentPage + 1 < totalPages">
+          <a class="page-link" (click)="onPageChange(currentPage + 1)">Next</a>
+        </li>
+        <li class="page-item" *ngIf="currentPage +  1< totalPages">
+          <a class="page-link" (click)="onPageChange(totalPages-1)">Last</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

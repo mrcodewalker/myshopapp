@@ -1,0 +1,81 @@
+<app-header></app-header>
+<div class="container-fluid">
+  <div class="intro-section">
+    <h1 style="color: white">My Purchase</h1>
+    <p>Details order which you have been ordered </p>
+  </div>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Thumbnail</th>
+      <th>Product Name</th>
+      <th>Total Money</th>
+      <th>Delivery Status</th>
+      <th>Payment Method</th>
+      <th>Payment Status</th>
+      <th>Contact Seller</th>
+      <!--
+      <th>Shipping Method</th>
+      <th>Shipping Address</th>
+
+        <th>Shipping Date</th>
+      <th>Payment Method</th>
+      -->
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let order of orders" class="control-table">
+      <td>
+        {{ order.id }}</td>
+      <td (click)="onOrderClick(order.id)">
+       <img [src]="showImage(order.order_details[0].product.thumbnail)" class="thumbnail-control">
+      </td>
+      <td (click)="onOrderClick(order.id)">{{ order.order_details[0].product.name }}</td>
+      <td (click)="onOrderClick(order.id)">{{ order.total_money }}</td>
+      <td (click)="onOrderClick(order.id)">{{ order.status }}</td>
+      <td (click)="onOrderClick(order.id)">{{ order.payment_method }}</td>
+      <td>
+        <label *ngIf="order.active">The order has been completed</label>
+        <label *ngIf="!order.active" class="text-danger">The order has not been completed</label>
+      </td>
+      <td>
+        <button class="btn btn-primary" (click)="window.location.href = 'https://www.facebook.com/hai.huynhngoc.12382/'">Contact</button>
+      </td>
+      <!--
+      <td>{{ order.shipping_method }}</td>
+      <td>{{ order.shipping_address }}</td>
+
+      <td>{{ order.shipping_date | date }}</td>
+      <td>{{ order.payment_method }}</td>
+      -->
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="d-flex justify-content-center">
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <li class="page-item" *ngIf="currentPage > 0">
+        <a class="page-link"
+           (click)="onPageChange(0)">First</a>
+      </li>
+      <li class="page-item" *ngIf="currentPage > 0">
+        <a class="page-link"
+           (click)="onPageChange(currentPage-1)">Previous</a>
+      </li>
+      <ng-container *ngFor="let page of visiblePages">
+        <li class="page-item" [ngClass]="{'active': page === currentPage +1}">
+          <a class="page-link" (click)="onPageChange(page-1)">{{ page }}</a>
+        </li>
+      </ng-container>
+      <li class="page-item" *ngIf="currentPage + 1 < totalPages">
+        <a class="page-link" (click)="onPageChange(currentPage + 1)">Next</a>
+      </li>
+      <li class="page-item" *ngIf="currentPage +  1< totalPages">
+        <a class="page-link" (click)="onPageChange(totalPages-1)">Last</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+<app-footer></app-footer>

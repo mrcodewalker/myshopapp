@@ -1,0 +1,23 @@
+<div class="container-fluid">
+  <h1>This is a page detail category admin</h1>
+  <h2>Category Information</h2>
+  <hr>
+  <div class="container" *ngIf="category">
+    <div class="row">
+      <div class="col-md-5">
+        <label><span class="information">Category ID:</span> {{ category.id }}</label>
+      </div>
+      <div class="col-md-5">
+        <label *ngIf="!editButton"><span class="information">Category Name:</span> {{ category.name }}</label>
+        <span class="information" *ngIf="editButton">Category Name: <input type="text" [placeholder]="category.name" [(ngModel)]="category.name"/></span>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-primary" [(ngModel)]="editButton" *ngIf="!editButton" (click)="clickEditButton()">Edit</button>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <button class="btn btn-primary"
+          (click)="updateCategory()"
+  >Save</button>
+</div>

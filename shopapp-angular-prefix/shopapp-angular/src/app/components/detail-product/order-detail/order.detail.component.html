@@ -1,0 +1,85 @@
+<app-header></app-header>
+<div class="container">
+    <div class="confirmation-container">
+        <h1>Order confirmation</h1>
+        <p>Thank you for has been ordered successfully, please confirm that to delivery</p>
+    </div>
+    <div *ngIf="orderResponse" class="row">
+        <div class="col-md-6">
+          <h2 class="product-header">Customer</h2>
+          <div class="mb-3">
+            <p class="form-label">Full name: {{ orderResponse.fullname }}</p>
+          </div>
+          <div class="mb-3">
+            <p class="form-label">Email: {{ orderResponse.email }}</p>
+          </div>
+          <div class="mb-3">
+            <p class="form-label">Phone number: {{ orderResponse.phone_number }}</p>
+          </div>
+          <div class="mb-3">
+            <p class="form-label">Address: {{ orderResponse.address }}</p>
+          </div>
+          <div class="mb-3">
+            <p class="form-label">Note: {{ orderResponse.note }}</p>
+          </div>
+          <div class="mb-3">
+            <p class="form-label">Shipping method: {{ orderResponse.shipping_method }}</p>
+          </div>
+          <div class="mb-3">
+            <p class="form-label">Payment method: {{ orderResponse.payment_method }}</p>
+          </div>
+          <div class="mb-3">
+            <p class="form-label text-primary" *ngIf="orderResponse.active">Payment status: Completed </p>
+            <p class="form-label text-danger" *ngIf="!orderResponse.active">Payment status: Uncompleted </p>
+          </div>
+        </div>
+      <div class="col-md-6">
+        <h2 class="product-order">All of items was ordered</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col" class="text-start">Product</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Total</th>
+                  </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let item of orderResponse.order_details">
+                  <tr>
+                    <td>
+                      <div class="product-info">
+                        <img [src]="item.product.thumbnail" alt="Product Image" class="product-image">
+                        <span class="product-name">{{ item.product.name }}</span>
+                      </div>
+                    </td>
+                    <td>
+                      {{ item.quantity }}
+                    </td>
+                    <td>
+                      {{ item.product.price | currency:'VND':'symbol':'1.0-0' }}
+                    </td>
+                    <td>
+                      {{ item.product.price* item.quantity | currency:'VND':'symbol':'1.0-0'}}
+                    </td>
+                  </tr>
+                </ng-container>
+            </tbody>
+        </table>
+      <p class="mb-0" *ngIf="this.total===this.totalAmount">Total Amount: {{ totalAmount | currency:'VND':'symbol':'1.0-0'}}</p>
+      <p class="mb-0" *ngIf="this.totalAmount!=this.total">
+        <del>Total Amount: {{ total | currency:'VND':'symbol':'1.0-0'}}</del>
+        <br>
+        Discounted Amount: {{ totalAmount | currency:'VND':'symbol':'1.0-0'}}
+      </p>
+    </div>
+      <div class="text-center mt-3">
+        <button class="btn btn-gradient" type="button" *ngIf="!orderResponse.active&&orderResponse.payment_method=='atm'"
+        (click)="purchaseOrder()">Purchase</button>
+        <button class="btn btn-gradient" type="button" *ngIf="(orderResponse.active&&orderResponse.payment_method=='atm')
+              || (!orderResponse.active&&orderResponse.payment_method=='cod')" routerLink="/">Go back</button>
+      </div>
+</div>
+</div>
+
+<app-footer></app-footer>

@@ -1,0 +1,111 @@
+<div class="container-fluid" xmlns="http://www.w3.org/1999/html">
+  <h1>Detail Order Page</h1>
+  <h2>Order Information</h2>
+  <div class="container" *ngIf="orderResponse">
+    <div class="col">
+      <div class="row-cols-4">
+        <label><span class="information">Order ID:</span> {{ orderResponse.id }}</label>
+      </div>
+      <div class="row-cols-4">
+        <label><span class="information">User ID:</span> {{ orderResponse.user_id }}</label>
+      </div>
+      <div class="row-cols-4">
+        <label><span class="information">Full Name:</span> {{ orderResponse.fullname }}</label>
+      </div>
+      <div class="row-cols-4">
+        <label><span class="information">Phone Number:</span> {{ orderResponse.phone_number }}</label>
+      </div>
+      <div class="row-cols-4">
+        <label><span class="information">Email:</span> {{ orderResponse.email }}</label>
+      </div>
+      <div class="row-cols-4">
+        <label><span class="information">Address:</span> {{ orderResponse.address }}</label>
+      </div>
+      <div class="row-cols-4">
+        <label><span class="information">User ID:</span> {{ orderResponse.user_id }}</label>
+      </div>
+      <div class="row-cols-4">
+        <label><span class="information">Note:</span> {{ orderResponse.note }}</label>
+      </div>
+      <div class="row-cols-4">
+        <label><span class="information">Order Date:</span> {{ orderResponse.order_date }}</label>
+      </div>
+      <div class="row-cols-4">
+        <label><span class="information">Shipping Method:</span> {{ orderResponse.shipping_method }}</label>
+      </div>
+      <div class="row-cols-4">
+        <label><span class="information">Shipping Address:</span> {{ orderResponse.shipping_address }}</label>
+      </div>
+      <div class="row-cols-4">
+        <label><span class="information">Shipping Date:</span> {{ orderResponse.shipping_date }}</label>
+      </div>
+      <div class="row-cols-4">
+        <label><span class="information">Payment Method:</span> {{ orderResponse.payment_method }}</label>
+      </div>
+      <div class="row-cols-5">
+        <span class="information">Status: </span>
+        <select [(ngModel)]="orderResponse.status">
+          <option [value]="'pending'">Pending</option>
+          <option [value]="'processing'">Processing</option>
+          <option [value]="'shipped'">Shipped</option>
+          <option [value]="'delivered'">Delivered</option>
+          <option [value]="'cancelled'">Cancelled</option>
+        </select>
+      </div>
+      <div class="row">
+        <table class="table">
+          <thead>
+          <tr>
+            <th>Image</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <!--
+            <th>Shipping Method</th>
+            <th>Shipping Address</th>
+
+             <th>Shipping Date</th>
+            <th>Payment Method</th>
+            -->
+            <th *ngIf="orderResponse.status==='pending'">Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of orderResponse.order_details">
+            <td>
+              <img [src]="item.product.thumbnail" alt="Product Image" class="product-image"></td>
+            <td>{{item.product.name}}</td>
+            <td> {{item.quantity }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.price*item.quantity }}</td>
+            <!--
+            <td>{{ order.shipping_method }}</td>
+            <td>{{ order.shipping_address }}</td>
+
+            <td>{{ order.shipping_date | date }}</td>
+            <td>{{ order.payment_method }}</td>
+            -->
+            <td>
+              <div style="display: flex; gap: 10px;" *ngIf="orderResponse.status==='pending'">
+                <button
+                  class="btn btn-primary">
+                  Update
+                </button>
+                <button class="btn btn-danger"
+                >Delete</button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row-cols-6">
+    <button class="btn btn-primary"
+            (click)="updateOrder(orderResponse)"
+    >Save</button>
+    </div>
+  </div>
+
+</div>

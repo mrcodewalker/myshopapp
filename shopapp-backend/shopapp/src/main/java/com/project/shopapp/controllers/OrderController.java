@@ -30,6 +30,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -170,6 +171,23 @@ public class OrderController {
                     .build());
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+    @GetMapping("/get_orders_by_user_id/{id}")
+    public ResponseEntity<?> getOrdersByUserId(
+            @PathVariable("id") Long id
+    ){
+        try{
+            List<OrderResponse> orderResponses = new ArrayList<>();
+            for (Order order: this.orderService.getOrdersByUserId(id)){
+                orderResponses.add(OrderResponse.fromOrder(order));
+            }
+            return ResponseEntity.ok(OrderListResponse
+                    .builder()
+                            .orders(orderResponses)
+                    .build());
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

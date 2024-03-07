@@ -12,6 +12,7 @@ import {UserService} from "./user.service";
 export class OrderService{
   private apiOrderBase = `${environment.apiBaseUrl}/orders`;
   private apiGetAllOrders = `${environment.apiBaseUrl}/orders/get-orders-by-keyword`;
+  private apiGetOrdersByUserId = `${environment.apiBaseUrl}/orders/get_orders_by_user_id`;
   constructor(private http: HttpClient,
               private userService: UserService) {
   }
@@ -45,5 +46,8 @@ export class OrderService{
       .set('page', page.toString());
     const userId = this.userService.getUserResponseFromLocalStorage()?.id;
     return this.http.get<any>(this.apiOrderBase+`/list/`+userId?.toString(), {params});
+  }
+  getAllOrdersByUserId(): Observable<any>{
+    return this.http.get(this.apiGetOrdersByUserId+`/`+this.userService.getUserResponseFromLocalStorage()?.id.toString());
   }
 }

@@ -18,4 +18,5 @@ public interface IOrderService {
     OrderResponse updateOrder(Long id, UpdateOrderDTO updateOrderDTO) throws Exception;
     void deleteOrder(long id) throws Exception;
     Page<Order> getOrdersByKeyword(String keyword, Pageable pageable);
+    List<Order> getOrdersByUserId(Long userId);
 }

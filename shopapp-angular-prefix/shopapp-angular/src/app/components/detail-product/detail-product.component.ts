@@ -6,6 +6,10 @@ import {ProductImage} from "../../models/product.image";
 import {CartService} from "../../services/cart.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthGuard} from "../../guards/auth.guard";
+import {CommentService} from "../../services/comment.service";
+import {CommentDto} from "../../dtos/comment/comment.dto";
+import {OrderResponse} from "../../responses/order/order.response";
+import {OrderService} from "../../services/order.service";
 
 @Component({
   selector: 'app-detail-product',
@@ -15,20 +19,54 @@ import {AuthGuard} from "../../guards/auth.guard";
 export class DetailProductComponent implements OnInit{
     product?: Product;
     productId: number = 0;
+    comments: CommentDto[] = [];
+    message: string ="";
     quantity: number = 1;
     idDirect: number = 1;
+    orders: OrderResponse[] = [];
     currentImageIndex: number = 0;
     constructor(
       private productService: ProductService,
       private cartService: CartService,
       private router: ActivatedRoute,
-      private route: Router
+      private route: Router,
+      private commentService: CommentService,
+      private orderService: OrderService
       // private categoryService: CategoryService,
       // private router: Router,
       // private activatedRoute: ActivatedRoute
     ) {
     }
     ngOnInit(): void {
+      localStorage.removeItem('storeIds');
+      localStorage.removeItem('storedIds');
+      this.orderService.getAllOrdersByUserId().subscribe({
+        next: (response: any) =>{
+          debugger;
+          this.orders = response.orders;
+          this.orders.forEach((response) => {
+            if (response.status.toLowerCase() == 'delivered') {
+              let storedIds = JSON.parse(localStorage.getItem('storedIds') || '[]');
+
+              response.order_details.forEach((clone) => {
+                if (!storedIds.includes(clone.product.id)){
+                  storedIds.push(clone.product.id);
+                }
+              });
+              localStorage.setItem('storedIds', JSON.stringify(storedIds));
+            }
+          });
+
+          debugger;
+        },
+        complete: () =>{
+          debugger;
+        },
+        error: (error: any) =>{
+          debugger;
+          console.log("Error fetching data: error ",error.error.message);
+        }
+      })
       this.router.params.subscribe(params => {
         this.idDirect = params['id'];
         debugger;
@@ -51,6 +89,21 @@ export class DetailProductComponent implements OnInit{
             debugger;
             this.product = response;
             this.showImage(0);
+            this.commentService.getAllComments(this.productId).subscribe({
+              next: (response_comment: any) => {
+                debugger;
+                this.comments = response_comment.comments;
+                this.message = response_comment.message;
+                debugger;
+              },
+              complete: () => {
+                debugger;
+              },
+              error: (error: any) =>{
+                debugger;
+                console.log("Error fetching data: error "+error.error.message);
+              }
+            })
           },
           complete: () => {
             debugger;
@@ -115,5 +168,8 @@ export class DetailProductComponent implements OnInit{
       console.error("Cannot add product to cart because of null value");
     }
     this.route.navigate(['/orders']);
+  }
+  addComment(){
+
   }
 }

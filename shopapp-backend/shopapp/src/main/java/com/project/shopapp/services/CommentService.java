@@ -84,6 +84,11 @@ public class CommentService implements ICommentService{
     }
 
     @Override
+    public List<Comment> findByProductId(Long productId) throws Exception {
+        return this.commentRepository.findByProductId(productId);
+    }
+
+    @Override
     public Comment updateComment(long id, CommentDTO commentDTO) throws Exception {
         Comment comment = this.getCommentById(id);
         User user = userService.getUserById(commentDTO.getUserId());

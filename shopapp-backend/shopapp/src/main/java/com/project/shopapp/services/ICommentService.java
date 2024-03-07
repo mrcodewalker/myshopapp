@@ -14,6 +14,8 @@ public interface ICommentService {
     Comment getCommentById(long id) throws Exception;
     List<Comment> getAllComments() throws Exception;
     List<Comment> findByOrderId(Long orderId) throws Exception;
+    List<Comment> findByProductId(Long productId) throws Exception;
+
     Comment updateComment(long id, CommentDTO commentDTO) throws Exception;
     void deleteComment(long id);
     Page<Comment> getOrdersByKeyword(String keyword, Pageable pageable);

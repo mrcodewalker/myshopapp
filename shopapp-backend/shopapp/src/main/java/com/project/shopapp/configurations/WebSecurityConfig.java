@@ -143,6 +143,11 @@ public class WebSecurityConfig {
                              .requestMatchers(HttpMethod.PUT,
                                      String.format("%s/orders/**", apiPrefix)).hasAnyRole(Role.ADMIN)
 
+                             .requestMatchers(
+                                     HttpMethod.GET,
+                                     String.format("%s/orders/get_orders_by_user_id/**", apiPrefix)
+                             ).hasAnyRole(Role.ADMIN, Role.USER)
+
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
 
                              .requestMatchers(HttpMethod.GET,

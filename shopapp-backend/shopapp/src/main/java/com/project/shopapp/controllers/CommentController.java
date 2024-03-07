@@ -44,7 +44,7 @@ public class CommentController {
             @PathVariable("id") Long id
     ){
         try{
-            List<Comment> comments = this.commentService.findByOrderId(id);
+            List<Comment> comments = this.commentService.findByProductId(id);
             List<CommentResponse> orderResponses = new ArrayList<>();
             for (Comment comment: comments){
                 orderResponses.add(CommentResponse.fromComment(comment));

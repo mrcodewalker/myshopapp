@@ -16,4 +16,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "(:keyword IS NULL OR :keyword = '' OR c.commentContent LIKE %:keyword% )")
     Page<Comment> findByKeyword(String keyword, Pageable pageable);
     List<Comment> findByOrderId(Long orderId);
+    List<Comment> findByProductId(Long productId);
+
 }

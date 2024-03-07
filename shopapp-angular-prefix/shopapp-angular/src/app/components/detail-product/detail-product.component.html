@@ -54,8 +54,38 @@
                         <button (click)="increaseQuantity()">+</button>
                     </div>
                 </div>
+              <hr>
+              <div class="container-fluid" *ngIf="formComment">
+                <form (ngSubmit)="submitComment()">
+                  <div class="form-group">
+                    <label for="comment_content">Comment:</label>
+                    <textarea class="form-control" id="comment_content" name="comment_content" [(ngModel)]="this.createComment.comment_content"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label>Rating:</label>
+                    <div class="rating">
+                      <span class="fa fa-star" [class.checked]="this.createComment.rating>=1" (click)="setRating(1)"></span>
+                      <span class="fa fa-star" [class.checked]="this.createComment.rating>=2" (click)="setRating(2)"></span>
+                      <span class="fa fa-star" [class.checked]="this.createComment.rating>=3" (click)="setRating(3)"></span>
+                      <span class="fa fa-star" [class.checked]="this.createComment.rating>=4" (click)="setRating(4)"></span>
+                      <span class="fa fa-star" [class.checked]="this.createComment.rating>=5" (click)="setRating(5)"></span>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>
+                </form>
+              </div>
               <div class="container-fluid">
-                
+                <div class="comment" *ngFor="let comment of comments">
+                  <div class="comment-header">
+                    <h4 *ngIf="comment.user_id!==this.userId">{{ comment.fullname }}</h4>
+                    <h4 *ngIf="comment.user_id=== this.userId">{{ comment.fullname }} <span style="color: red">(Me)</span></h4>
+                    <span class="comment-date">{{ comment.created_at | date:'dd/MM/yyyy, HH:mm:ss' }}</span>
+                  </div>
+                  <p class="comment-content">{{ comment.comment_content }}</p>
+                  <div class="rating-star">
+                    <span class="fa fa-star" *ngFor="let i of getStarArray(comment.rating)"></span>
+                  </div>
+                </div>
               </div>
             </div>
         </div>

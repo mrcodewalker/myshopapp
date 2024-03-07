@@ -5,6 +5,8 @@ import com.project.shopapp.dtos.CommentDTO;
 import com.project.shopapp.models.Comment;
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @Data
@@ -24,6 +26,8 @@ public class CommentResponse {
     private int rating;
     @JsonProperty("order_id")
     private Long orderId;
+    @JsonProperty("created_at")
+    private Date createdAt;
     public static CommentResponse fromComment(Comment comment){
         return CommentResponse.builder()
                 .commentContent(comment.getCommentContent())
@@ -32,6 +36,7 @@ public class CommentResponse {
                 .userId(comment.getUser().getId())
                 .rating(comment.getRating())
                 .orderId(comment.getOrder().getId())
+                .createdAt(comment.getCreatedAt())
                 .build();
     }
 }

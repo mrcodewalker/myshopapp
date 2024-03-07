@@ -5,6 +5,7 @@ export class CommentDto{
   comment_content: string;
   rating: number;
   order_id: number;
+  created_at: Date;
 
   constructor(data: any) {
     this.product_id = data.product_id;
@@ -13,5 +14,6 @@ export class CommentDto{
     this.comment_content = data.comment_content;
     this.rating = data.rating;
     this.order_id = data.order_id;
+    this.created_at = data.created_at;
   }
 }

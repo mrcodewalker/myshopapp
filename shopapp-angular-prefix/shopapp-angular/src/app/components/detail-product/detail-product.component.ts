@@ -10,6 +10,8 @@ import {CommentService} from "../../services/comment.service";
 import {CommentDto} from "../../dtos/comment/comment.dto";
 import {OrderResponse} from "../../responses/order/order.response";
 import {OrderService} from "../../services/order.service";
+import {CreateCommentDto} from "../../dtos/comment/create.comment.dto";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-detail-product',
@@ -20,10 +22,19 @@ export class DetailProductComponent implements OnInit{
     product?: Product;
     productId: number = 0;
     comments: CommentDto[] = [];
+    afterSortComments: CommentDto[] = [];
     message: string ="";
     quantity: number = 1;
+    userId: number = 1;
+    createComment: CreateCommentDto = {
+      product_id: this.productId,
+      comment_content: "",
+      rating: 5,
+      user_id: this.userId
+    };
     idDirect: number = 1;
     orders: OrderResponse[] = [];
+    formComment : boolean = false;
     currentImageIndex: number = 0;
     constructor(
       private productService: ProductService,
@@ -31,32 +42,88 @@ export class DetailProductComponent implements OnInit{
       private router: ActivatedRoute,
       private route: Router,
       private commentService: CommentService,
-      private orderService: OrderService
+      private orderService: OrderService,
+      private userService: UserService
       // private categoryService: CategoryService,
       // private router: Router,
       // private activatedRoute: ActivatedRoute
     ) {
     }
     ngOnInit(): void {
-      localStorage.removeItem('storeIds');
+      this.userId = Number(this.userService.getUserResponseFromLocalStorage()?.id);
+      this.router.params.subscribe(params => {
+        this.idDirect = params['id'];
+        debugger;
+      });
+      const idParam = this.idDirect;
+      debugger
+      if (idParam !== null){
+        this.productId = +idParam;
+      }
+      this.createComment.user_id = this.userId;
+      this.createComment.product_id = this.productId;
+      this.commentService.getAllComments(this.productId).subscribe({
+        next: (response_comment: any) => {
+          debugger;
+          response_comment.comments.forEach((items: CommentDto) => {
+              const clone = new Date(items.created_at);
+              clone.setHours(clone.getHours()-7);
+              items.created_at = clone;
+            debugger;
+          });
+          this.comments = response_comment.comments;
+          this.message = response_comment.message;
+          const storedIdsJSON = localStorage.getItem("storedIds");
+          this.sortComments();
+          localStorage.setItem('productIdComment',this.productId.toString());
+          debugger;
+        },
+        complete: () => {
+          debugger;
+        },
+        error: (error: any) =>{
+          debugger;
+          console.log("Error fetching data: error "+error.error.message);
+        }
+      })
       localStorage.removeItem('storedIds');
+      const formCommentJSON = localStorage.getItem('formComment');
       this.orderService.getAllOrdersByUserId().subscribe({
         next: (response: any) =>{
           debugger;
           this.orders = response.orders;
-          this.orders.forEach((response) => {
-            if (response.status.toLowerCase() == 'delivered') {
-              let storedIds = JSON.parse(localStorage.getItem('storedIds') || '[]');
-
-              response.order_details.forEach((clone) => {
-                if (!storedIds.includes(clone.product.id)){
-                  storedIds.push(clone.product.id);
+          let id: number[] = [];
+          this.orders.forEach((items) => {
+            if (items.status.toLowerCase() == 'delivered'&& items.active) {
+              items.order_details.forEach((item) => {
+                if (item.product.id === this.productId){
+                  id.push(items.id);
+                }
+              })
+            }
+            debugger;
+            let count = 0;
+            if (id.length>0){
+              this.comments.forEach((comment) =>{
+                if (!id.includes(comment.order_id)){
+                  count++;
+                } else {
+                  this.formComment = false;
+                  return;
                 }
               });
-              localStorage.setItem('storedIds', JSON.stringify(storedIds));
+            }
+            if (count===this.comments.length && id.length > 0){
+              this.formComment = true;
+            } else {
+              this.formComment = false;
             }
           });
-
+          const idJSON = JSON.stringify(id);
+          localStorage.setItem("storedIds", idJSON);
+          if (id==null){
+            this.formComment = false;
+          }
           debugger;
         },
         complete: () =>{
@@ -67,15 +134,9 @@ export class DetailProductComponent implements OnInit{
           console.log("Error fetching data: error ",error.error.message);
         }
       })
-      this.router.params.subscribe(params => {
-        this.idDirect = params['id'];
-        debugger;
-      });
-      const idParam = this.idDirect;
-      debugger
-      // this.cartService.clearCart();
-      if (idParam !== null){
-        this.productId = +idParam;
+      const storedFormComment = localStorage.getItem('formComment');
+      if (storedFormComment !== null) {
+        this.formComment = JSON.parse(storedFormComment);
       }
       if (!isNaN(this.productId)){
         this.productService.getDetailProduct(this.productId).subscribe({
@@ -89,21 +150,6 @@ export class DetailProductComponent implements OnInit{
             debugger;
             this.product = response;
             this.showImage(0);
-            this.commentService.getAllComments(this.productId).subscribe({
-              next: (response_comment: any) => {
-                debugger;
-                this.comments = response_comment.comments;
-                this.message = response_comment.message;
-                debugger;
-              },
-              complete: () => {
-                debugger;
-              },
-              error: (error: any) =>{
-                debugger;
-                console.log("Error fetching data: error "+error.error.message);
-              }
-            })
           },
           complete: () => {
             debugger;
@@ -116,6 +162,7 @@ export class DetailProductComponent implements OnInit{
       } else {
         console.log("Invalid productId: ",idParam);
       }
+      // this.cartService.clearCart();
     }
     showImage(index: number){
       debugger;
@@ -172,4 +219,47 @@ export class DetailProductComponent implements OnInit{
   addComment(){
 
   }
+  submitComment(){
+      if (this.createComment.rating>0){
+        debugger;
+        const storedIdsJSON = localStorage.getItem("storedIds");
+        // localStorage.setItem('productIdComment',this.productId.toString());
+        if (storedIdsJSON&&storedIdsJSON.length>0) {
+          const storedIds: number[] = JSON.parse(storedIdsJSON);
+          this.commentService.createComment(storedIds[0], this.createComment).subscribe({
+            next: (response: any) =>{
+              debugger;
+              console.log(response);
+              alert("Post comment successfully!");
+            },
+            complete: () =>{
+             debugger;
+            },
+            error: (error: any) => {
+              debugger;
+              console.log("Error fetching data: error "+error.error.message);
+            }
+          });
+        } else {
+          alert("You must buy this product to comment");
+        }
+      } else {
+        alert("Please select 1 -> 5 star for this product");
+      }
+  }
+  setRating(rating: number) {
+    this.createComment.rating = rating;
+  }
+  getStarArray(rating: number): number[] {
+    return Array.from({ length: rating }, (_, index) => index + 1);
+  }
+  sortComments(): void {
+    this.afterSortComments = this.comments.sort((a, b) => {
+      const dateA = new Date(a.created_at);
+      const dateB = new Date(b.created_at);
+      return dateB.getTime() - dateA.getTime();
+    });
+  }
+
+  protected readonly Number = Number;
 }

@@ -16,6 +16,7 @@ import {Commune} from "../../models/commune";
 import {ProvinceService} from "../../services/province.service";
 import {PaymentService} from "../../services/payment.service";
 import {CreatePaymentDto} from "../../dtos/payment/create.payment.dto";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-order',
@@ -63,6 +64,7 @@ export class OrderComponent implements OnInit{
     private router: Router,
     private provinceService: ProvinceService,
     private paymentService: PaymentService,
+    private userService: UserService
   ) {
     this.orderForm = this.fb.group({
       fullname: ['', Validators.required],
@@ -165,6 +167,7 @@ export class OrderComponent implements OnInit{
         ...this.orderData,
         ...this.orderForm.value
       };
+      this.orderData.user_id = Number(this.userService.getUserResponseFromLocalStorage()?.id);
       if (this.selectedCommune==undefined||this.selectedProvince==undefined||this.selectedDistrict==undefined){
         alert("Please check your select province");
       }

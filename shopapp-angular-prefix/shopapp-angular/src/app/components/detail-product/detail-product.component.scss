@@ -92,3 +92,48 @@ app-footer {
 form {
   margin-bottom: 100px;
 }
+
+.rating .fa-star {
+  font-size: 24px;
+}
+
+.rating .fa-star.checked {
+  color: gold;
+}
+.container-fluid {
+  padding: 20px;
+}
+
+.comment {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment-header h4 {
+  margin: 0;
+}
+
+.comment-date {
+  font-size: 14px;
+  color: #777;
+}
+
+.comment-content {
+  margin-top: 10px;
+  color: black;
+}
+.rating-star{
+  color: gold;
+}
+.rating-star .fa-star {
+  font-size: 24px;
+}

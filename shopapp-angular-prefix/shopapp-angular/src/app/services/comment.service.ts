@@ -11,7 +11,7 @@ import {CreateCommentDto} from "../dtos/comment/create.comment.dto";
 })
 export class CommentService {
   private apiGetComments = `${environment.apiBaseUrl}/comments`;
-  private apiCreateComment = `${environment.apiBaseUrl}/comment/create_comment/`;
+  private apiCreateComment = `${environment.apiBaseUrl}/comments/create_comment/`;
 
   constructor(private http: HttpClient) {
   }

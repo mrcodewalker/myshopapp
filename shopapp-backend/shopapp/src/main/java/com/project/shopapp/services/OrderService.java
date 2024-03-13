@@ -154,4 +154,9 @@ public class OrderService implements IOrderService{
     public List<Order> getOrdersByUserId(Long userId) {
         return this.orderRepository.findOrdersByUserId(userId);
     }
+
+    @Override
+    public List<Order> findOrdersDelivered(Long productId) {
+        return this.orderRepository.findOrdersDelivered(productId);
+    }
 }

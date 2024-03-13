@@ -19,4 +19,5 @@ public interface IOrderService {
     void deleteOrder(long id) throws Exception;
     Page<Order> getOrdersByKeyword(String keyword, Pageable pageable);
     List<Order> getOrdersByUserId(Long userId);
+    List<Order> findOrdersDelivered(Long productId);
 }

@@ -22,4 +22,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     Page<Order> findByKeyword(String keyword, Pageable pageable);
     @Query("SELECT o FROM Order o WHERE (:userId = o.user.id)")
     List<Order> findOrdersByUserId(Long userId);
+    @Query("SELECT DISTINCT o FROM Order o JOIN o.orderDetails od WHERE (o.status = 'delivered') AND (o.active = true) AND (od.product.id = :productId)")
+    List<Order> findOrdersDelivered(@Param("productId") Long productId);
 }

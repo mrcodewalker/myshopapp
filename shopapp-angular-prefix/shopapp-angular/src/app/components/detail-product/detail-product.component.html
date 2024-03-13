@@ -54,6 +54,9 @@
                         <button (click)="increaseQuantity()">+</button>
                     </div>
                 </div>
+              <div class="product-sold">
+                <span>{{this.productSold.quantity}} sold</span>
+              </div>
               <hr>
               <div class="container-fluid" *ngIf="formComment">
                 <form (ngSubmit)="submitComment()">

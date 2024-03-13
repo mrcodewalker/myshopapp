@@ -1,9 +1,11 @@
 package com.project.shopapp.controllers;
 
 import com.project.shopapp.dtos.OrderDTO;
+import com.project.shopapp.dtos.ProductSoldDTO;
 import com.project.shopapp.dtos.UpdateOrderDTO;
 import com.project.shopapp.dtos.UpdateUserDTO;
 import com.project.shopapp.models.Order;
+import com.project.shopapp.models.OrderDetail;
 import com.project.shopapp.models.User;
 import com.project.shopapp.resoponses.*;
 import com.project.shopapp.resoponses.create.CreateOrderResponse;
@@ -186,6 +188,30 @@ public class OrderController {
                     .builder()
                             .orders(orderResponses)
                     .build());
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @GetMapping("/get_delivered_orders/{id}")
+    public ResponseEntity<?> findOrdersByProductid(
+            @PathVariable("id") Long productId
+    ){
+        try{
+            List<Order> orders = this.orderService.findOrdersDelivered(productId);
+            Long count = 0L;
+            for (Order order : orders) {
+                for (OrderDetail item : order.getOrderDetails()) {
+                    if (productId.equals(item.getProduct().getId())) {
+                        count += item.getNumberOfProducts();
+                    }
+                }
+            }
+            return ResponseEntity.ok(
+                    ProductSoldDTO.builder()
+                            .quantity(count)
+                            .message("Get product has delivered successfully!")
+                            .build()
+            );
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

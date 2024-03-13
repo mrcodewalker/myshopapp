@@ -12,6 +12,7 @@ import {OrderResponse} from "../../responses/order/order.response";
 import {OrderService} from "../../services/order.service";
 import {CreateCommentDto} from "../../dtos/comment/create.comment.dto";
 import {UserService} from "../../services/user.service";
+import {ProductSoldDto} from "../../dtos/order/product.sold.dto";
 
 @Component({
   selector: 'app-detail-product',
@@ -23,6 +24,10 @@ export class DetailProductComponent implements OnInit{
     productId: number = 0;
     comments: CommentDto[] = [];
     afterSortComments: CommentDto[] = [];
+    productSold: ProductSoldDto = {
+      message: "",
+      quantity: 0
+    };
     message: string ="";
     quantity: number = 1;
     userId: number = 1;
@@ -62,6 +67,20 @@ export class DetailProductComponent implements OnInit{
       }
       this.createComment.user_id = this.userId;
       this.createComment.product_id = this.productId;
+      this.orderService.getOrdersByProductId(this.productId).subscribe({
+        next: (response: any) =>{
+          debugger;
+          this.productSold.message = response.message;
+          this.productSold.quantity = response.quantity;
+        },
+        complete: () => {
+          debugger;
+        },
+        error: (error: any) => {
+          debugger;
+          console.log("Error fetching data error: "+error.error.message);
+        }
+      });
       this.commentService.getAllComments(this.productId).subscribe({
         next: (response_comment: any) => {
           debugger;

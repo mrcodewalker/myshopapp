@@ -148,6 +148,11 @@ public class WebSecurityConfig {
                                      String.format("%s/orders/get_orders_by_user_id/**", apiPrefix)
                              ).hasAnyRole(Role.ADMIN, Role.USER)
 
+                             .requestMatchers(
+                                     HttpMethod.GET,
+                                     String.format("%s/orders/get_delivered_orders/**", apiPrefix)
+                             ).permitAll()
+
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
 
                              .requestMatchers(HttpMethod.GET,

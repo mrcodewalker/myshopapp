@@ -21,7 +21,7 @@ export class UserService {
   private apiChangesPassword = `${environment.apiBaseUrl}/users/changes-password/`;
   private apiGetUsers = `${environment.apiBaseUrl}/users/get-users-by-keyword`;
   private apiUpdateUserByAdmin = `${environment.apiBaseUrl}/users/update-user/`;
-
+  private apiUploadImage = `${environment.apiBaseUrl}/users/upload-image`;
   private apiConfig = {
     headers: this.createHeaders(),
   };
@@ -92,12 +92,19 @@ export class UserService {
   logOut(){
 
   }
-  updateUserDetail(token: string, updatedUser: UpdatedUserDto): Observable<any>{
+  updateUserDetail(token: string, updatedUser: UpdatedUserDto, file: File): Observable<any> {
+    const formData = new FormData();
+    if (file) {
+      formData.append('file', file);
+    } else {
+      updatedUser.avatar = "default_avatar.png";
+    }
     debugger;
+    formData.append('updatedUser', JSON.stringify(updatedUser));
+
     let userResponse = this.getUserResponseFromLocalStorage();
-    return this.http.put(this.apiUpdateUser+userResponse?.id,updatedUser, {
+    return this.http.put(this.apiUpdateUser + userResponse?.id, formData, {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       })
     });

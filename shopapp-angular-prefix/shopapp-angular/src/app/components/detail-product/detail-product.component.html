@@ -50,7 +50,7 @@
                 <div class="product-quantity">
                     <div class="border-wrapper">
                         <button (click)="decreaseQuantity()">-</button>
-                        <input type="text" [value]="quantity">
+                        <input type="text" [value]="quantity" (input)="updateQuantity($event)">
                         <button (click)="increaseQuantity()">+</button>
                     </div>
                 </div>

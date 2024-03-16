@@ -21,6 +21,10 @@ export class AdminComponent implements OnInit {
 
   ngOnInit() {
     this.userResponse = this.userService.getUserResponseFromLocalStorage();
+    if (this.userResponse?.role.name.toUpperCase()=="USER"){
+      alert("You don't have permission to access this page");
+      window.history.back();
+    }
     const currentAdminPage = localStorage.getItem('currentAdminPage');
     if (typeof currentAdminPage === 'string' && currentAdminPage !== null) {
       this.router.navigate([currentAdminPage]);

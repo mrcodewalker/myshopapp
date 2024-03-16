@@ -3,6 +3,24 @@
 <div class="row">
   <div class="col-md-3 mx-auto">
     <h2 class="product-header">Customer</h2>
+    <div class="mb-3">
+      <label for="avatar" class="form-label">Avatar</label>
+      <hr>
+      <div class="preview-avatar" *ngIf="this.selectedImage==null">
+        <img class="avatar-user" [src]="this.avatar" alt="Avatar">
+      </div>
+      <div class="preview-avatar" *ngIf="this.selectedImage!=null">
+        <img class="avatar-user" [src]="this.selectedImage" alt="Avatar">
+      </div>
+      <hr>
+      <input type="file"
+             formControlName="avatar"
+             name="avatar"
+             accept="image/*"
+             class="form-control"
+             id="avatar"
+             (change)="onFileSelected($event)">
+    </div>
       <div class="mb-3">
         <label for="name" class="form-label">Full name</label>
         <input type="text"

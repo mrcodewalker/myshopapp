@@ -23,26 +23,21 @@
     </div>
     <div class="row">
         <div class="col-lg-4 col-md-6" *ngFor="let product of products">
-            <div class="product-item" (click)="onProductClick(product.id)">
-                <img [src]="product.url"
-                     alt="Product Image"
-                     class="product-image">
-                <h3 class="product-name">{{product.name}}</h3>
-                <p class="product-description">{{ product.description }}</p>
-                <p class="product-price">Giá: $ {{ product.price }}</p>
-<!--                <div class="product-rating">-->
-<!--                    <i class="fas fa-star"></i>-->
-<!--                    <i class="fas fa-star"></i>-->
-<!--                    <i class="fas fa-star"></i>-->
-<!--                    <i class="fas fa-star"></i>-->
-<!--                    <i class="fas fa-star-half-alt"></i>-->
-<!--                </div>-->
-                <div class="product-actions">
-                    <button class="btn btn-primary">Add to cart</button>
-                    <span class="space-x"></span>
-                    <button class="btn btn-success">Buy now</button>
-                </div>
+          <div class="product-item" (click)="onProductClick(product.id)">
+            <div class="product-image-container">
+              <img [src]="product.url"
+                   alt="Product Image"
+                   class="product-image">
             </div>
+            <h3 class="product-name">{{product.name}}</h3>
+            <p class="product-description">{{ product.description }}</p>
+            <p class="product-price">Giá: $ {{ product.price }}</p>
+            <div class="product-actions">
+              <button class="btn btn-primary">Add to cart</button>
+              <span class="space-x"></span>
+              <button class="btn btn-success">Buy now</button>
+            </div>
+          </div>
         </div>
     </div>
 </div>

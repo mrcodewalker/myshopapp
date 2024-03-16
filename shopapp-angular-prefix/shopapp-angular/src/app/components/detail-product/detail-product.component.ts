@@ -201,6 +201,8 @@ export class DetailProductComponent implements OnInit{
       debugger;
       if (this.product){
         this.cartService.addToCart(this.product.id, this.quantity);
+        alert("Add to cart successfully with quantity: "+this.quantity);
+        window.location.reload();
       } else {
         console.error("Cannot add product to cart because of null value");
       }
@@ -223,6 +225,12 @@ export class DetailProductComponent implements OnInit{
       if (this.quantity>1){
         this.quantity--;
       }
+  }
+  updateQuantity(event: any) {
+    const newQuantity = parseInt(event.target.value);
+    if (!isNaN(newQuantity) && newQuantity > 0) {
+      this.quantity = newQuantity;
+    }
   }
 
   buyNow(){
@@ -250,6 +258,7 @@ export class DetailProductComponent implements OnInit{
               debugger;
               console.log(response);
               alert("Post comment successfully!");
+              window.location.reload();
             },
             complete: () =>{
              debugger;

@@ -49,16 +49,16 @@
                         <a href="#" class="register-link">Forgot password</a>
                     </div>
                 </div>
-                <div class="form-group">
-                    <select class="form-control access-right"
-                        [(ngModel)]="selectedRole"
-                        name="selectedRole">
-                      <option selected disabled>Login permission</option>
-                      <option *ngFor="let role of roles" [ngValue]="role">
-                        {{ role.name }}
-                      </option>
-                    </select>
-                  </div>
+<!--                <div class="form-group">-->
+<!--                    <select class="form-control access-right"-->
+<!--                        [(ngModel)]="selectedRole"-->
+<!--                        name="selectedRole">-->
+<!--                      <option selected disabled>Login permission</option>-->
+<!--                      <option *ngFor="let role of roles" [ngValue]="role">-->
+<!--                        {{ role.name }}-->
+<!--                      </option>-->
+<!--                    </select>-->
+<!--                  </div>-->
                   <button type="button"
                           (click)="login()"
                           class="login-button">Login</button>

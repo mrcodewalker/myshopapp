@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" *ngIf="userResponse && userResponse.role && userResponse.role.name && userResponse.role.name.toUpperCase() === 'ADMIN'">
   <header class="header bg-success text-white d-flex justify-content-between">
     <h1 class="header-title">
       Dashboard Header

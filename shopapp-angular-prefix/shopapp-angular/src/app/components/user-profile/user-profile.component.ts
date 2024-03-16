@@ -13,6 +13,7 @@ import {UserService} from "../../services/user.service";
 import {TokenService} from "../../services/token.service";
 import {UserResponse} from "../../responses/user/user.response";
 import {UpdatedUserDto} from "../../dtos/user/updated.user.dto";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'user-profile',
@@ -24,9 +25,16 @@ export class UserProfileComponent implements OnInit{
   userProfileForm: FormGroup;
   dateOfBirthFirst?: Date;
   userResponse?: UserResponse;
+  avatar: string='';
   token: string = this.tokenService.getToken() ?? '';
   password: string = '';
   retype_password: string ='';
+  base64Image: string = '';
+  avatarName : string = '';
+  fileSelected: boolean = false;
+  date_of_birth?: Date;
+  selectedImage: string | ArrayBuffer | null = null;
+  file?: File;
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -68,12 +76,18 @@ export class UserProfileComponent implements OnInit{
       };
       const dateOfBirth = this.userResponse?.date_of_birth ? new Date(this.userResponse.date_of_birth) : null;
         debugger;
+
       this.userProfileForm.patchValue({
         fullname: this.userResponse?.fullname ?? '',
         address: this.userResponse?.address ?? '',
         date_of_birth: dateOfBirth,
         phone_number: this.userResponse?.phone_number ?? '',
       });
+      this.avatarName = response.avatar;
+      this.avatar = `${environment.apiBaseUrl}/products/images/${response.avatar}`;
+      if (dateOfBirth) {
+        this.date_of_birth = dateOfBirth;
+      }
       this.userService.saveUserResponseLocalStorage(this.userResponse);
     },
       complete: () => {
@@ -98,20 +112,24 @@ export class UserProfileComponent implements OnInit{
       const updatedUserDTO: UpdatedUserDto = {
         fullname: this.userProfileForm.get('fullname')?.value,
         address: this.userProfileForm.get('address')?.value,
-        date_of_birth: this.userProfileForm.get('date_of_birth')?.value,
+        date_of_birth: new Date(this.userProfileForm.get('date_of_birth')?.value),
+        avatar: this.avatarName
       };
       debugger;
-      this.userService.updateUserDetail(this.token, updatedUserDTO).subscribe({
-        next: (response: any) => {
-          alert("You have changed information successfully!")
-          this.router.navigate(['/']);
-        },
-        error: (error: any) => {
-          alert(error.error.message);
-        }
-      });
+      if (!this.file || this.file.size === 0) {
+        this.file = new File([], 'empty.txt');
+      }
+        this.userService.updateUserDetail(this.token, updatedUserDTO, this.file).subscribe({
+          next: (response: any) => {
+            alert("You have changed information successfully!")
+            this.router.navigate(['/']);
+          },
+          error: (error: any) => {
+            alert(error.error.message);
+          }
+        });
     } else {
-      if (this.userProfileForm.hasError('passwordMismatch')){
+      if (this.userProfileForm.hasError('passwordMismatch')) {
         alert('Password and retype password is not correctly');
       }
     }
@@ -119,5 +137,31 @@ export class UserProfileComponent implements OnInit{
   saveChanges(){
 
   }
-
+  onFileSelected(event: any) {
+    const files: FileList | null = event?.target?.files;
+    if (files && files.length > 0) {
+      const file: File = files[0];
+      this.file = file;
+    }
+    this.fileSelected = true;
+    if (this.file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.selectedImage = reader.result;
+      };
+      reader.readAsDataURL(this.file);
+    }
+  }
+  uploadImage(file: File) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64Image = (event.target as FileReader).result?.toString().split(',')[1];
+      if (base64Image) {
+        this.base64Image = base64Image;
+      } else {
+        throw new Error('base64Image is undefined');
+      }
+    };
+    reader.readAsDataURL(file);
+  }
 }

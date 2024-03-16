@@ -76,3 +76,16 @@ app-footer {
 form {
   margin-bottom: 100px;
 }
+.preview-avatar {
+  display: flex;
+  justify-content: center;
+}
+
+.avatar-user {
+  height: 200px;
+  width: auto;
+  -webkit-box-shadow:0px 0px 94px 23px rgba(45,255,196,0.43);
+  -moz-box-shadow: 0px 0px 94px 23px rgba(45,255,196,0.43);
+  box-shadow: 0px 0px 94px 23px rgba(45,255,196,0.43);
+  border-radius: 10px;
+}

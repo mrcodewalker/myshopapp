@@ -123,3 +123,23 @@ app-footer {
   padding: 10px 0;
   text-align: center;
 }
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 20px;
+}
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.product-item {
+  flex-basis: calc(33.33% - 20px);
+  margin-bottom: 20px;
+}
+.product-item .product-image {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+}

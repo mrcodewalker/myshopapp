@@ -138,3 +138,8 @@ ALTER TABLE comments
 ADD COLUMN is_active BOOLEAN,
 ADD COLUMN order_id INT,
 ADD FOREIGN KEY (order_id) REFERENCES orders(id);
+
+ALTER TABLE users 
+ADD COLUMN avatar VARCHAR(300) DEFAULT '';
+UPDATE users 
+SET avatar = 'default_avatar.png';

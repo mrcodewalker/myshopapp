@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface IUserService {
     User createUser(UserDTO userDTO) throws Exception;
-    String login(String phoneNumber,String password, Long roleId) throws Exception;
+    String login(String phoneNumber,String password) throws Exception;
     User getUserById(long id) throws Exception;
     User getUserDetailsFromToken(String token) throws Exception;
     List<UserResponse> getAllUsers();

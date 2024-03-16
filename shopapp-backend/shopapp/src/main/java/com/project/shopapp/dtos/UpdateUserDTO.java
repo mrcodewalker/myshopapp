@@ -33,6 +33,7 @@ public class UpdateUserDTO {
     @JsonProperty("date_of_birth")
     private Date dateOfBirth;
 
-
+    @JsonProperty("avatar")
+    private String avatar;
 
 }

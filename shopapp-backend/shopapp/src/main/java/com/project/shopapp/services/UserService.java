@@ -71,6 +71,7 @@ public class UserService implements IUserService{
                 .googleAccountId(userDTO.getGoogleAccountId())
                 .role(new Role(userDTO.getRoleId(), Role.USER))
                 .active(true)
+                .avatar("default_avatar.png")
                 .build();
 //        User user = modelMapper.map(userDTO,User.class);
 //        Role role = roleRepository.findById(userDTO.getRoleId())
@@ -84,7 +85,7 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public String login(String phoneNumber, String password, Long roleId) throws Exception {
+    public String login(String phoneNumber, String password) throws Exception {
         Optional<User> optionalUser = userRepository.findByPhoneNumber(phoneNumber);
         if (optionalUser.isEmpty()){
             throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
@@ -98,6 +99,7 @@ public class UserService implements IUserService{
                 throw new BadCredentialsException(localizationUtils.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
             }
         }
+        Long roleId = existingUser.getRole().getId();
         Optional<Role> optionalRole = roleRepository.findById(roleId);
         if (optionalRole.isEmpty()|| !roleId.equals(existingUser.getRole().getId())) {
             throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_DOES_NOT_EXISTS));
@@ -179,6 +181,7 @@ public class UserService implements IUserService{
             existingUser.setDateOfBirth(updateUserDTO.getDateOfBirth());
         }
         existingUser.setId(userId);
+        existingUser.setAvatar(updateUserDTO.getAvatar());
 
         return userRepository.save(existingUser);
     }

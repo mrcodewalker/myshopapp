@@ -1,6 +1,7 @@
 package com.project.shopapp.controllers;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.shopapp.dtos.*;
 import com.project.shopapp.dtos.Province;
 import com.project.shopapp.models.Role;
@@ -22,12 +23,20 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4300")
@@ -85,9 +94,10 @@ public class UserController {
         }
     }
     @PutMapping("/details/{userId}")
-    public ResponseEntity<UserResponse> updateUserDetails(
+    public ResponseEntity<?> updateUserDetails(
             @PathVariable("userId") Long userId,
-            @RequestBody UpdateUserDTO userDTO,
+            @RequestPart("updatedUser") String updatedUserJson,
+            @RequestPart("file") MultipartFile file,
             @RequestHeader("Authorization") String authorizationHeader
     ){
         try {
@@ -97,6 +107,17 @@ public class UserController {
             if (user.getId() != userId){
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
+            ObjectMapper objectMapper = new ObjectMapper();
+            UpdateUserDTO userDTO = objectMapper.readValue(updatedUserJson, UpdateUserDTO.class);
+
+            if (file.getOriginalFilename().equals("empty.txt") && userDTO.getAvatar().equals("default_avatar.png")) {
+                userDTO.setAvatar("default_avatar.png");
+            } else if (file.getOriginalFilename().equals("empty.txt") && !userDTO.getAvatar().equals("default_avatar.png")) {
+                userDTO.setAvatar(userDTO.getAvatar());
+            } else if (!file.getOriginalFilename().equals("empty.txt")) {
+                String uniqueName = this.storeFile(file);
+                userDTO.setAvatar(uniqueName);
+            }
 
             User updatedUser = userService.updateUser(userId, userDTO);
             return ResponseEntity.ok(UserResponse.fromUser(updatedUser));
@@ -105,6 +126,32 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
     }
+    private boolean isImageFile(MultipartFile file){
+        String contentType = file.getContentType();
+        return contentType != null && contentType.startsWith("image/");
+    }
+    private String storeFile(MultipartFile file) throws IOException {
+        if (!isImageFile(file)||file.getOriginalFilename()==null) {
+            throw new IOException("Invalid image file format");
+        }
+        // Generate a unique filename using UUID
+        String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        String uniqueFileName = UUID.randomUUID().toString() + "_" + originalFileName;
+
+        // Save the file to the "uploads" directory
+        Path uploadDir = Paths.get("uploads");
+        if (!Files.exists(uploadDir)) {
+            Files.createDirectories(uploadDir);
+        }
+
+        Path destination = uploadDir.resolve(uniqueFileName);
+        Files.copy(file.getInputStream(), destination);
+
+        // You can save the unique filename to the database or use it as needed
+        // For example, you can set it in the ProductDTO's thumbnail field
+        String thumbnail = "/api/products/uploads/" + uniqueFileName;
+        return uniqueFileName;
+    }
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
             @Valid @RequestBody UserLoginDTO userLoginDTO,
@@ -112,8 +159,7 @@ public class UserController {
             ) {
         try {
             String token = userService.login(userLoginDTO.getPhoneNumber(),
-                    userLoginDTO.getPassword(),
-                    userLoginDTO.getRoleId() == null ? 1 : userLoginDTO.getRoleId()
+                    userLoginDTO.getPassword()
             );
             return ResponseEntity.ok(LoginResponse.builder()
                             .message(

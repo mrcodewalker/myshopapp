@@ -41,6 +41,8 @@ public class UserResponse{
     private int googleAccountId;
     @JsonProperty("role")
     private Role role;
+    @JsonProperty("avatar")
+    private String avatar;
     public static UserResponse fromUser(User user){
         UserResponse userResponse = UserResponse.builder()
                 .dateOfBirth(user.getDateOfBirth())
@@ -52,6 +54,7 @@ public class UserResponse{
                 .active(user.isActive())
                 .role(user.getRole())
                 .phoneNumber(user.getPhoneNumber())
+                .avatar(user.getAvatar())
                 .build();
         return userResponse;
     }

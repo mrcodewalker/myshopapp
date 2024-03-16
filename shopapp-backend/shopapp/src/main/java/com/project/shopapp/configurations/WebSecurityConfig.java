@@ -3,6 +3,7 @@ package com.project.shopapp.configurations;
 import com.project.shopapp.filters.JwtTokenFilter;
 import com.project.shopapp.models.Role;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.internal.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -80,6 +81,9 @@ public class WebSecurityConfig {
 
                              .requestMatchers(HttpMethod.GET,
                                      String.format("%s/users/get-communes/**",apiPrefix)).permitAll()
+
+                             .requestMatchers(HttpMethod.GET,
+                                     String.format("%s/users/upload/image",apiPrefix)).hasAnyRole(Role.ADMIN, Role.USER)
 
                              .requestMatchers(HttpMethod.GET,
                                      String.format("%s/categories**",apiPrefix)).permitAll()

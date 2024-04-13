@@ -40,7 +40,9 @@ export class RegisterComponent {
         "date_of_birth":this.dateOfBirth,
         "facebook_account_id":0,
         "google_account_id":0,
-        "role_id":1
+        "role_id":1,
+        "email": '',
+        "avatar": ''
       }
 
       this.userService.register(registerDto)

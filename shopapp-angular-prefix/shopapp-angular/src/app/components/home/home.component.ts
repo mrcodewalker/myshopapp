@@ -4,8 +4,10 @@ import {Product} from "../../models/product";
 import {ProductService} from "../../services/product.service";
 import {Category} from "../../models/category";
 import {CategoryService} from "../../services/category.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {PaymentService} from "../../services/payment.service";
+import {UserService} from "../../services/user.service";
+import {LoginGoogleDto} from "../../dtos/user/login.google.dto";
 
 @Component({
   selector: 'app-home',
@@ -20,14 +22,27 @@ export class HomeComponent implements OnInit{
   pages: number[] = [];
   totalPages: number = 0;
   visiblePages: number[] = [];
+  idEmail: number = 0;
   keyword: string = '';
+  googleInfoLogin: LoginGoogleDto = {
+    email: '',
+    picture: '',
+    name: ''
+  }
   selectedCategoryId: number = 0;
   constructor(private productService: ProductService,
               private categoryService: CategoryService,
               private router: Router,
+              private userService: UserService,
+              private route: ActivatedRoute,
               private paymentService: PaymentService) {
   }
     ngOnInit(): void {
+    debugger;
+    const currentPage = localStorage.getItem('currentProductPage');
+    if (currentPage){
+      this.currentPage = parseInt(currentPage, 10);
+    }
         this.getCategories(this.currentPage, this.itemsPerPage);
         this.getProducts(this.keyword,this.selectedCategoryId,this.currentPage, this.itemsPerPage);
         console.log(new URLSearchParams(window.location.search));

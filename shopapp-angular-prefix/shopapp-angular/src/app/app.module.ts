@@ -32,6 +32,7 @@ import { DetailCategoryAdminComponent } from './components/admin/categories/deta
 import { MyPurchaseComponent } from './my-purchase/my-purchase.component';
 import { CouponAdminComponent } from './components/admin/coupons/coupon-admin.component';
 import { UsersAdminComponent } from './components/admin/users/users-admin.component';
+import { UpdateUserComponent } from './components/user-profile/update-user/update-user.component';
   // import { AdminComponent } from './components/admin/admin.component';
   // import { OrderAdminComponent } from './components/admin/orders/order-admin.component';
   // import { CategoryAdminComponent } from './components/admin/categories/category-admin.component';
@@ -56,6 +57,7 @@ import { UsersAdminComponent } from './components/admin/users/users-admin.compon
       MyPurchaseComponent,
       CouponAdminComponent,
       UsersAdminComponent,
+      UpdateUserComponent,
       // AdminComponent,
       // OrderAdminComponent,
       // CategoryAdminComponent,

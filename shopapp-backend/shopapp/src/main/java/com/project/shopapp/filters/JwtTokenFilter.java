@@ -72,7 +72,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         final List<Pair<String,String>> byPassTokens = Arrays.asList(
                 Pair.of(String.format("%s/roles", apiPrefix),"GET"),
                 Pair.of(String.format("%s/users/login", apiPrefix),"POST"),
-                Pair.of(String.format("%s/users/register", apiPrefix),"POST")
+                Pair.of(String.format("%s/users/phone_number", apiPrefix),"GET"),
+                Pair.of(String.format("%s/users/login/oauth2", apiPrefix),"POST"),
+                Pair.of(String.format("%s/users/register", apiPrefix),"POST"),
+                Pair.of(String.format("%s/oauth2/login/google", apiPrefix),"GET"),
+                Pair.of(String.format("%s/oauth2/login/facebook", apiPrefix),"GET"),
+                Pair.of(String.format("%s/users/login/google", apiPrefix),"GET"),
+                Pair.of(String.format("%s/oauth2/get/info/google", apiPrefix),"GET")
         );
 
         String requestPath = request.getServletPath();
@@ -83,12 +89,22 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             // Allow access to %s/orders
             return true;
         }
+        if (requestPath.equals(
+                String.format("%s/oauth2/login/google", apiPrefix))
+                            && requestMethod.equals("GET")){
+            return true;
+        }
         if (requestPath.equals(String.format("%s/categories", apiPrefix))
                 && requestMethod.equals("GET")) {
             // Allow access to %s/categories
             return true;
         }
         if (requestPath.equals(String.format("%s/products", apiPrefix))
+                && requestMethod.equals("GET")) {
+            // Allow access to %s/products
+            return true;
+        }
+        if (requestPath.equals("/login")
                 && requestMethod.equals("GET")) {
             // Allow access to %s/products
             return true;
@@ -118,8 +134,26 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             // Allow access to %s/product_images
             return true;
         }
-
-
+        if (requestPath.contains(apiPrefix+"/emails/users")
+                && requestMethod.equals("GET")) {
+            // Allow access to %s/product_images
+            return true;
+        }
+        if (requestPath.contains(apiPrefix+"/facebooks/users")
+                && requestMethod.equals("GET")) {
+            // Allow access to %s/product_images
+            return true;
+        }
+        if (requestPath.contains(apiPrefix+"/users/phone")
+                && requestMethod.equals("GET")) {
+            // Allow access to %s/product_images
+            return true;
+        }
+        if (requestPath.contains(apiPrefix+"/users/login/oauth2")
+                && requestMethod.equals("POST")) {
+            // Allow access to %s/product_images
+            return true;
+        }
 
         for (Pair<String, String> bypassToken : byPassTokens) {
             if (requestPath.contains(bypassToken.getLeft())

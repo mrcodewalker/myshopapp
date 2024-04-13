@@ -21,6 +21,10 @@ export class RegisterDto {
 
   @IsString()
   @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
   retype_password: string;
 
   @IsDate()
@@ -28,6 +32,8 @@ export class RegisterDto {
   facebook_account_id: number = 0;
   google_account_id: number = 0;
   role_id: number = 1;
+  @IsString()
+  avatar: string;
   constructor(data: any) {
     this.fullname = data.fullName;
     this.phone_number = data.phone_number;
@@ -38,5 +44,7 @@ export class RegisterDto {
     this.facebook_account_id = data.facebook_account_id || 0;
     this.google_account_id = data.google_account_id || 0;
     this.role_id = data.role_id || 1;
+    this.email = data.email;
+    this.avatar = data.avatar;
   }
 }

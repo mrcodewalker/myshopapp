@@ -138,6 +138,7 @@ public ResponseEntity<?> viewImage(
         @PathVariable String imageName
 ) {
     try{
+        
         Path imagePath = Paths.get("uploads/"+imageName);
         UrlResource resource = new UrlResource(imagePath.toUri());
 

@@ -1,0 +1,90 @@
+
+
+.container {
+  color: white;
+}
+.intro-section {
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+.product-header {
+  color: rgb(233, 66, 178);
+}
+.form-control {
+  background-color: rgb(19, 23, 42);
+  border: 1px solid rgb(29, 33, 54);
+  color: white;
+}
+
+.form-control:focus {
+  border-color: white;
+  background-color: rgb(19, 23, 42);
+}
+.form-label {
+  color: white;
+}
+.product-header {
+  color: rgb(233, 66, 178);;
+}
+.product-order {
+  color: rgb(105, 244, 181);
+}
+table {
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  border-collapse: separate;
+  border: 1px solid white;
+  border-spacing: 0;
+  background-color: rgb(19, 23, 42);
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: center;
+}
+.product-info {
+  display: flex;
+  align-items: center;
+}
+
+.product-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.product-name {
+  color: white;
+  margin-right: 10px;
+}
+.btn-gradient {
+  background: linear-gradient(to right, rgb(233, 66, 178), rgb(127, 68, 255));
+  color: white;
+  border-radius: 30px;
+  width: 200px;
+}
+app-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+form {
+  margin-bottom: 100px;
+}
+.preview-avatar {
+  display: flex;
+  justify-content: center;
+}
+
+.avatar-user {
+  height: 200px;
+  width: auto;
+  -webkit-box-shadow:0px 0px 94px 23px rgba(45,255,196,0.43);
+  -moz-box-shadow: 0px 0px 94px 23px rgba(45,255,196,0.43);
+  box-shadow: 0px 0px 94px 23px rgba(45,255,196,0.43);
+  border-radius: 10px;
+}

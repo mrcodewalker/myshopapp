@@ -43,6 +43,8 @@ public class UserResponse{
     private Role role;
     @JsonProperty("avatar")
     private String avatar;
+    @JsonProperty("email")
+    private String email;
     public static UserResponse fromUser(User user){
         UserResponse userResponse = UserResponse.builder()
                 .dateOfBirth(user.getDateOfBirth())
@@ -54,6 +56,7 @@ public class UserResponse{
                 .active(user.isActive())
                 .role(user.getRole())
                 .phoneNumber(user.getPhoneNumber())
+                .email(user.getEmail())
                 .avatar(user.getAvatar())
                 .build();
         return userResponse;

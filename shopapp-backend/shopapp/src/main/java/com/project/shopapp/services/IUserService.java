@@ -11,7 +11,9 @@ import java.util.List;
 
 public interface IUserService {
     User createUser(UserDTO userDTO) throws Exception;
-    String login(String phoneNumber,String password) throws Exception;
+    String login(String phoneNumber, String password, String email) throws Exception;
+    String loginByOAuth2(String phoneNumber, String email) throws Exception;
+
     User getUserById(long id) throws Exception;
     User getUserDetailsFromToken(String token) throws Exception;
     List<UserResponse> getAllUsers();
@@ -24,4 +26,9 @@ public interface IUserService {
     List<CommuneDTO> getAllCommunesDTO(Long districtId) throws Exception;
     Page<User> findByKeyword(String keyword, Pageable pageable);
     User updateUserByAdmin(Long id, String roleName, boolean isActive) throws Exception;
+    User findByPhoneNumber(String phoneNumber);
+    User findByEmail(String email);
+    boolean existByEmail(String email);
+    boolean existByPhoneNumber(String phoneNumber);
+
 }

@@ -16,6 +16,7 @@ import {AdminGuardFn} from "./guards/admin.guard";
 // import {ProductAdminComponent} from "./components/admin/products/product-admin.component";
 import {CommonModule} from "@angular/common";
 import {MyPurchaseComponent} from "./my-purchase/my-purchase.component";
+import {UpdateUserComponent} from "./components/user-profile/update-user/update-user.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -27,6 +28,7 @@ const routes: Routes = [
   { path: 'changes-password', component: ChangesPasswordComponent,canActivate:[AuthGuardFn] },
   { path: 'my-purchase', component: MyPurchaseComponent,canActivate:[AuthGuardFn] },
   { path: 'orders/:id', component: OrderDetailComponent },
+  { path: 'users/update', component: UpdateUserComponent },
   {
     path: 'admin',
     component: AdminComponent,

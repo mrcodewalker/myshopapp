@@ -84,7 +84,13 @@ export class UserProfileComponent implements OnInit{
         phone_number: this.userResponse?.phone_number ?? '',
       });
       this.avatarName = response.avatar;
-      this.avatar = `${environment.apiBaseUrl}/products/images/${response.avatar}`;
+        let avatarUrl = response.avatar;
+        let searchString = "https://lh3.googleusercontent.com";
+        if (avatarUrl.substring(0, searchString.length)===searchString){
+          this.avatar = response.avatar;
+        } else {
+          this.avatar = `${environment.apiBaseUrl}/products/images/${response.avatar}`;
+        }
       if (dateOfBirth) {
         this.date_of_birth = dateOfBirth;
       }
@@ -119,6 +125,8 @@ export class UserProfileComponent implements OnInit{
       if (!this.file || this.file.size === 0) {
         this.file = new File([], 'empty.txt');
       }
+      updatedUserDTO.fullname = updatedUserDTO.fullname.toString();
+      updatedUserDTO.address = updatedUserDTO.address.toString();
         this.userService.updateUserDetail(this.token, updatedUserDTO, this.file).subscribe({
           next: (response: any) => {
             alert("You have changed information successfully!")

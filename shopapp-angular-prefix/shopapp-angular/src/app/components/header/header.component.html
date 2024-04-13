@@ -33,6 +33,9 @@
                             Cart
                         </a>
                     </li>
+                  <div class="user-img" *ngIf="userResponse">
+                    <img [src]="this.avatar" class="user-ava-info" alt="User image">
+                  </div>
                     <li class="nav-item">
                       <ng-container *ngIf="userResponse" >
                         <ng-container
@@ -49,6 +52,7 @@
                             {{ userResponse.fullname }}
                           </a>
                         </ng-container>
+
                         <ng-template #popoverContent>
                           <div class="popover-list">
                             <a class="popover-item"

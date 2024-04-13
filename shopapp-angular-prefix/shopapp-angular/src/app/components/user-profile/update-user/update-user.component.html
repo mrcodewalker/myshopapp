@@ -1,0 +1,73 @@
+<app-header></app-header>
+<form [formGroup]="userProfileForm" #updatedForm="ngForm">
+  <div class="row">
+    <div class="col-md-3 mx-auto">
+      <h2 class="product-header">Customer</h2>
+      <div class="mb-3">
+        <label for="phone_number" class="form-label">Phone Number</label>
+        <div class="row">
+          <div class="col-md-9">
+          <input type="text" class="form-control"
+                 formControlName="phone_number" name="phone_number" id="phone_number">
+          </div>
+          <div class="col-md-3">
+          <button type="button" class="btn btn-primary" (click)="confirmPhoneNumber()">Confirm</button>
+          </div>
+         <div (click)="confirmPhoneNumber()" *ngIf="this.userProfileForm.touched&&this.buttonHit">
+           <div *ngIf="this.checkExistPhoneNumber">
+            <span class="text-danger">
+              This phone number existed
+            </span>
+           </div>
+           <div *ngIf="!this.checkExistPhoneNumber">
+            <span class="text-info">
+              This phone number valid
+            </span>
+           </div>
+         </div>
+          </div>
+      </div>
+      <div *ngIf="userProfileForm.get('phone_number')?.value.length<5&&userProfileForm.touched">
+        <span class="text-danger">
+          Phone Number length must be greater than 5
+        </span>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password"
+               formControlName="password"
+               name="password"
+               [class.is-invalid]="userProfileForm.get('password')!.invalid && userProfileForm.get('password')!.touched"
+               class="form-control" id="password">
+        <div *ngIf="userProfileForm.get('password')?.value.length<3&&userProfileForm.touched">
+          <span class="text-danger">
+            You must type down password with length greater than 3
+          </span>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <input type="text"
+               name="address"
+               formControlName="address"
+               class="form-control" id="address"
+               [class.is-invalid]="userProfileForm.get('address')!.invalid && userProfileForm.get('address')!.touched"
+        >
+      </div>
+      <div class="mb-3">
+        <label for="date_of_birth" class="form-label">Date Of Birth</label>
+        <input type="date"
+               name="date_of_birth"
+               formControlName="date_of_birth"
+               class="form-control" id="date_of_birth"
+               [class.is-invalid]="userProfileForm.get('date_of_birth')!.invalid && userProfileForm.get('date_of_birth')!.touched">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3 mx-auto">
+      <button type="submit" class="btn btn-primary" (click)="save()">Save</button>
+    </div>
+  </div>
+</form>
+<app-footer></app-footer>

@@ -30,6 +30,16 @@ spring:
     basename: i18n/messages
     encoding: UTF-8
     default-locale: en
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 
+            client-secret:
+          facebook:
+            client-id:
+            client-secret:
 api:
   prefix: api/v1
 jwt:

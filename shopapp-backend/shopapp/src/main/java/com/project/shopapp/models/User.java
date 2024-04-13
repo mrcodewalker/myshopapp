@@ -54,6 +54,8 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "avatar")
     private String avatar;
+    @Column(name = "email")
+    private String email;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

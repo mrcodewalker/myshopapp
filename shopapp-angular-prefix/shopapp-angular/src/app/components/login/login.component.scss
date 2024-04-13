@@ -110,3 +110,45 @@
     /* background-color: rgb(105, 244, 181) */
     margin: 20px;
 }
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #DB4437; /* Màu của Google */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-google:hover {
+  background-color: #cc3127; /* Màu hover */
+}
+.btn-facebook {
+  background-color: #3b5998; /* Màu nền Facebook */
+  color: #fff; /* Màu chữ */
+  padding: 10px 20px; /* Kích thước nút */
+  border-radius: 5px; /* Bo tròn các góc */
+  border: none; /* Loại bỏ viền */
+  cursor: pointer; /* Con trỏ hiển thị là hand */
+  font-size: 16px; /* Kích thước chữ */
+  transition: background-color 0.3s ease; /* Hiệu ứng khi hover */
+}
+
+.btn-facebook:hover {
+  background-color: #29487d; /* Màu nền Facebook khi hover */
+}
+.button-group {
+  display: flex; /* Sử dụng flexbox */
+  justify-content: space-around; /* Căn các phần tử con theo khoảng cách đều nhau */
+  align-items: center; /* Căn phần tử con theo chiều dọc */
+  width: 100%; /* Đảm bảo rằng button group sẽ căn giữa trên toàn bộ chiều rộng của container */
+  height: 50%;
+}
+
+.button-group button {
+  flex-grow: 1; /* Phần tử con sẽ mở rộng để lấp đầy không gian còn lại */
+  margin-right: 10px; /* Khoảng cách giữa các nút */
+}

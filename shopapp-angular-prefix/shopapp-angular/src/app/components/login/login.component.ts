@@ -8,6 +8,7 @@ import {TokenService} from "../../services/token.service";
 import {RoleService} from "../../services/role.service";
 import {Role} from "../../models/role";
 import {UserResponse} from "../../responses/user/user.response";
+import {LoginGoogleDto} from "../../dtos/user/login.google.dto";
 
 
 @Component({
@@ -22,6 +23,11 @@ export class LoginComponent implements OnInit{
   roles: Role[] = [];
   selectedRole: Role | undefined;
   rememberMe: boolean;
+  googleInfoLogin: LoginGoogleDto = {
+    email: '',
+    picture: '',
+    name: ''
+  }
   userResponse?: UserResponse;
   constructor(private router: Router,
               private userService: UserService,
@@ -41,7 +47,6 @@ export class LoginComponent implements OnInit{
         },
         error: (error: any) => {
           debugger
-          alert(error?.error?.message)
         }
       }
     )
@@ -50,7 +55,7 @@ export class LoginComponent implements OnInit{
     const loginDto: LoginDto = {
       phone_number:this.phoneNumber,
       password:this.password,
-      role_id: this.selectedRole?.id ?? 1
+      email: ''
     }
 
     this.userService.login(loginDto)
@@ -80,7 +85,6 @@ export class LoginComponent implements OnInit{
                 },
                 error: (error : any) => {
                   debugger
-                  alert(error.error.message);
                 }
               })
             }
@@ -90,7 +94,6 @@ export class LoginComponent implements OnInit{
           },
           error: (error : any) => {
             debugger
-            alert(error.error.message);
           }
         }
       );
@@ -103,5 +106,11 @@ export class LoginComponent implements OnInit{
 
     }
   }
-
+  continueWithGoogle(){
+    debugger;
+    window.location.href = "http://localhost:8088/oauth2/authorization/google";
+  }
+  continueWithFacebook(){
+    window.location.href = "http://localhost:8088/oauth2/authorization/facebook";
+  }
 }

@@ -63,6 +63,16 @@
                           (click)="login()"
                           class="login-button">Login</button>
                   <div class="divider"></div>
+                <div class="button-group">
+                  <button class="btn-google" (click)="continueWithGoogle()">
+                    <i class="fab fa-google" style="margin-right: 5px"></i>
+                    Continue with Google
+                  </button>
+                  <button class="btn-facebook" (click)="continueWithFacebook()">
+                    <i class="fab fa-facebook" style="margin-right: 5px"></i>
+                    Continue with Facebook
+                  </button>
+                </div>
                   <p class="text-center">You don't have account?<span>
                     <a routerLink="/register" class="register-link">Create an account</a></span></p>
         </div>

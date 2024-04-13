@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("SELECT u FROM User u WHERE " +
             "(:keyword IS NULL OR :keyword = '' OR u.fullName LIKE CONCAT('%', :keyword, '%') OR u.phoneNumber LIKE CONCAT('%', :keyword, '%'))")
     Page<User> findByKeyword(String keyword, Pageable pageable);
+    boolean existsByEmail(String email);
+    User findByEmail(String email);
 }

@@ -22,38 +22,53 @@ export class UserService {
   private apiGetUsers = `${environment.apiBaseUrl}/users/get-users-by-keyword`;
   private apiUpdateUserByAdmin = `${environment.apiBaseUrl}/users/update-user/`;
   private apiUploadImage = `${environment.apiBaseUrl}/users/upload-image`;
+  private apiLoginGoogle = `${environment.apiBaseUrl}/emails/users/`;
+  private apiLoginFacebook = `${environment.apiBaseUrl}/facebooks/users/`;
+  private apiContainPhoneNumber = `${environment.apiBaseUrl}/users/phone/`;
+  private apiFacebookEmail = `${environment.apiBaseUrl}/facebooks/users`;
+  private apiGmailEmail = `${environment.apiBaseUrl}/emails/users`;
+  private apiUserEmail = `${environment.apiBaseUrl}/users/login/oauth2`;
+  private apiGetPhoneNumberByEmail = `${environment.apiBaseUrl}/users/phone_number`;
+
   private apiConfig = {
     headers: this.createHeaders(),
   };
+
   constructor(private http: HttpClient,
               private tokenService: TokenService
               // private httpUtilService: HttpUtilService
-              ) {}
-  private createHeaders() : HttpHeaders {
+  ) {
+  }
+
+  private createHeaders(): HttpHeaders {
     return new HttpHeaders({
-      'Content-Type' : 'application/json',
-      'Accept-Language' : 'vi'
+      'Content-Type': 'application/json',
+      'Accept-Language': 'vi'
     });
   }
-  register(registerDto: RegisterDto):Observable<any> {
+
+  register(registerDto: RegisterDto): Observable<any> {
     this.createHeaders();
     return this.http.post(this.apiRegister, registerDto, this.apiConfig);
   }
-  login(loginDto: LoginDto):Observable<any> {
-    return this.http.post(this.apiLogin, loginDto, this.apiConfig );
+
+  login(loginDto: LoginDto): Observable<any> {
+    return this.http.post(this.apiLogin, loginDto, this.apiConfig);
   }
-  getUserDetails(token: string): Observable<any>{
+
+  getUserDetails(token: string): Observable<any> {
     return this.http.post(this.apiUserDetails, {
       headers: new HttpHeaders({
-        'Content-Type' : 'application/json',
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       })
     });
   }
-  saveUserResponseLocalStorage(userResponse?: UserResponse){
-    try{
+
+  saveUserResponseLocalStorage(userResponse?: UserResponse) {
+    try {
       debugger;
-      if (userResponse==null || !userResponse){
+      if (userResponse == null || !userResponse) {
         return;
       }
       const userResponseJSON = JSON.stringify(userResponse);
@@ -61,18 +76,20 @@ export class UserService {
       localStorage.setItem('userResponse', userResponseJSON);
 
       console.log('User response saved to local storage');
-    } catch (error){
-      console.error('Error saving user response to local storage: ',error);
+    } catch (error) {
+      console.error('Error saving user response to local storage: ', error);
     }
   }
-  removeUserFromLocalStorage():void{
+
+  removeUserFromLocalStorage(): void {
     try {
       localStorage.removeItem('userResponse');
       console.log("UserResponse data removed from local storage");
-    } catch (error){
-      console.log("Error removing user data from local storage: ",error);
+    } catch (error) {
+      console.log("Error removing user data from local storage: ", error);
     }
   }
+
   getUserResponseFromLocalStorage(): UserResponse | undefined {
     try {
       const userResponseJSON = localStorage.getItem('userResponse');
@@ -89,9 +106,11 @@ export class UserService {
       return undefined;
     }
   }
-  logOut(){
+
+  logOut() {
 
   }
+
   updateUserDetail(token: string, updatedUser: UpdatedUserDto, file: File): Observable<any> {
     const formData = new FormData();
     if (file) {
@@ -109,24 +128,59 @@ export class UserService {
       })
     });
   }
-  changesPasswordUser(token: string, changesPassword: ChangesPasswordDto): Observable<any>{
+
+  changesPasswordUser(token: string, changesPassword: ChangesPasswordDto): Observable<any> {
     debugger;
     let userResponse = this.getUserResponseFromLocalStorage();
-    return this.http.post(this.apiChangesPassword+userResponse?.id, changesPassword, {
+    return this.http.post(this.apiChangesPassword + userResponse?.id, changesPassword, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       })
     });
   }
-  getAllUsers(keyword: string, page: number, limit: number) :Observable<any> {
+
+  getAllUsers(keyword: string, page: number, limit: number): Observable<any> {
     const params = new HttpParams()
       .set('keyword', keyword)
       .set('page', page.toString())
       .set('limit', limit.toString());
     return this.http.get(this.apiGetUsers, {params});
   }
-  updateUserByAdmin(id: number, user: UpdateUserByAdminDto):Observable<any>{
-    return this.http.put(this.apiUpdateUserByAdmin+id.toString(), user);
+
+  updateUserByAdmin(id: number, user: UpdateUserByAdminDto): Observable<any> {
+    return this.http.put(this.apiUpdateUserByAdmin + id.toString(), user);
+  }
+
+  getGoogleUserInfo(id: number): Observable<any> {
+    return this.http.get<any>(this.apiLoginGoogle + id.toString());
+  }
+
+  getFacebookUserInfo(id: number): Observable<any> {
+    return this.http.get<any>(this.apiLoginFacebook + id.toString());
+  }
+
+  getUserByPhoneNumber(phone_number: string): Observable<any> {
+    return this.http.get(this.apiContainPhoneNumber + phone_number);
+  }
+
+  getMessageByFacebook(email: string): Observable<any> {
+    let params = new HttpParams().set('email', email);
+    return this.http.get(this.apiFacebookEmail, {params: params});
+  }
+
+  getMessageByGmail(email: string): Observable<any> {
+    let params = new HttpParams().set('email', email);
+    return this.http.get(this.apiGmailEmail, {params: params});
+  }
+
+  getMessageUser(email: string): Observable<any> {
+    let params = new HttpParams().set('email', email);
+    return this.http.get(this.apiUserEmail, {params: params});
+  }
+
+  getPhoneNumber(email: string): Observable<any> {
+    let params = new HttpParams().set('email', email);
+    return this.http.get(this.apiGetPhoneNumberByEmail, {params: params});
   }
 }

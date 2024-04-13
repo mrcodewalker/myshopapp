@@ -71,52 +71,79 @@ public class UserService implements IUserService{
                 .googleAccountId(userDTO.getGoogleAccountId())
                 .role(new Role(userDTO.getRoleId(), Role.USER))
                 .active(true)
+                .email(userDTO.getEmail())
                 .avatar("default_avatar.png")
                 .build();
+
+        if (userDTO.getAvatar()!=null&&userDTO.getAvatar().length()>0){
+            user.setAvatar(userDTO.getAvatar());
+        }
+
 //        User user = modelMapper.map(userDTO,User.class);
 //        Role role = roleRepository.findById(userDTO.getRoleId())
 //                .orElseThrow(() -> new DataNotFoundException("Role not found"));
-        if (userDTO.getFacebookAccountId()==0&&userDTO.getGoogleAccountId()==0){
             String password = userDTO.getPassword();
             String encodePassword = passwordEncoder.encode(password);
             user.setPassword(encodePassword);
-        }
         return userRepository.save(user);
     }
 
     @Override
-    public String login(String phoneNumber, String password) throws Exception {
+    public String login(String phoneNumber, String password, String email) throws Exception {
+        if (email == null || email.equals("")) {
+            Optional<User> optionalUser = userRepository.findByPhoneNumber(phoneNumber);
+            if (optionalUser.isEmpty()) {
+                throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
+            }
+            User existingUser = optionalUser.get();
+            if (!existingUser.isActive()) {
+                throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.USER_IS_LOCKED));
+            }
+            if (existingUser.getFacebookAccountId() == 0 && existingUser.getGoogleAccountId() == 0) {
+                if (!passwordEncoder.matches(password, existingUser.getPassword())) {
+                    throw new BadCredentialsException(localizationUtils.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
+                }
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        phoneNumber, password,
+                        existingUser.getAuthorities()
+                );
+                authenticationManager.authenticate(authenticationToken);
+                return jwtTokenUtil.generateToken(existingUser);
+            }
+        } else {
+            Optional<User> optionalUser = userRepository.findByPhoneNumber(phoneNumber);
+            if (optionalUser.isEmpty()) {
+                throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
+            }
+            User existingUser = optionalUser.get();
+            if (!existingUser.isActive()) {
+                throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.USER_IS_LOCKED));
+            }
+            if (existingUser.getFacebookAccountId() == 1 || existingUser.getGoogleAccountId() == 1) {
+                if (!existingUser.getEmail().equals(email)) {
+                    throw new BadCredentialsException("Can not login with this account oauth2");
+                }
+                return jwtTokenUtil.generateToken(existingUser);
+            }
+        }
+        throw new BadCredentialsException(localizationUtils.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
+    }
+    @Override
+    public String loginByOAuth2(String phoneNumber, String email) throws Exception {
         Optional<User> optionalUser = userRepository.findByPhoneNumber(phoneNumber);
         if (optionalUser.isEmpty()){
             throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
         }
-//        return optionalUser.get(); // JWT Token
         User existingUser = optionalUser.get();
-        // Check password
-        if (existingUser.getFacebookAccountId() == 0
-                && existingUser.getGoogleAccountId() == 0){
-            if (!passwordEncoder.matches(password, existingUser.getPassword())){
-                throw new BadCredentialsException(localizationUtils.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
+        if (email.equals(existingUser.getEmail())) {
+            if (!optionalUser.get().isActive()) {
+                throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.USER_IS_LOCKED));
             }
+            return jwtTokenUtil.generateToken(existingUser);
         }
-        Long roleId = existingUser.getRole().getId();
-        Optional<Role> optionalRole = roleRepository.findById(roleId);
-        if (optionalRole.isEmpty()|| !roleId.equals(existingUser.getRole().getId())) {
-            throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_DOES_NOT_EXISTS));
-        }
-
-        if (!optionalUser.get().isActive()){
-            throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.USER_IS_LOCKED));
-        }
-
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-          phoneNumber, password,
-                existingUser.getAuthorities()
-        );
-        // Authenticate with java spring security
-        authenticationManager.authenticate(authenticationToken);
-        return jwtTokenUtil.generateToken(existingUser);
+        return "";
     }
+
 
     @Override
     public User getUserById(long id) throws Exception {
@@ -318,5 +345,25 @@ public class UserService implements IUserService{
         user.setRole(new Role(user.getRole().getId(),roleName.toLowerCase()));
         user.setActive(isActive);
         return this.userRepository.save(user);
+    }
+
+    @Override
+    public User findByPhoneNumber(String phoneNumber) {
+        return this.userRepository.findByPhoneNumber(phoneNumber).get();
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return this.userRepository.findByEmail(email);
+    }
+
+    @Override
+    public boolean existByEmail(String email) {
+        return this.userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existByPhoneNumber(String phoneNumber) {
+        return this.userRepository.existsByPhoneNumber(phoneNumber);
     }
 }

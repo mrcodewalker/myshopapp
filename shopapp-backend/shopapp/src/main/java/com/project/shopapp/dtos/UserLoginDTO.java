@@ -19,6 +19,6 @@ public class UserLoginDTO {
     @NotBlank(message = "Phone number is required")
     private String phoneNumber;
 
-    @JsonProperty("role_id")
-    private Long roleId;
+    @JsonProperty("email")
+    private String email;
 }

@@ -35,11 +35,11 @@ spring:
       client:
         registration:
           google:
-            client-id: 
-            client-secret:
+            client-id: // Please enter your client-id here
+            client-secret: // Please enter your client-secret here
           facebook:
-            client-id:
-            client-secret:
+            client-id: // Please enter your client-id here
+            client-secret: // Please enter your client-secret here
 api:
   prefix: api/v1
 jwt:
